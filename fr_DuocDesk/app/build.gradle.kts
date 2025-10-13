@@ -41,6 +41,8 @@ android {
 
 dependencies {
 
+    // Funciones básicas de Kotlin para Android
+    // Para componentes lifecycle
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -56,4 +58,21 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+
+    // Material Design 3 en Compose
+    implementation("androidx.compose.material3:material3:1.4.0")
+    // UI base en Compose
+    implementation("androidx.compose.ui:ui:1.9.3")
+    // Vista previa de UI en Android Studio
+    implementation("androidx.compose.ui:ui-tooling-preview:1.9.3")
+    // ViewModel en Compose
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
+    // Iconos de Material
+    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+
+    // Herramientas para debug UI
+    debugImplementation("androidx.compose.ui:ui-tooling:1.9.3")
+    // Testing
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.9.3")
 }
