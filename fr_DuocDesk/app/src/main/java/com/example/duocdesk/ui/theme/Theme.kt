@@ -8,13 +8,13 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Define colores primarios y secundarios
+//TODO: Colores primarios y secundarios de la aplicación, POR DEFINIR
 val LightColorScheme = lightColorScheme(
     primary = Color(0xFF6200EE),
     secondary = Color(0xFF03DAC6)
 )
 
-// Define la tipografía usada
+// TODO: Tipografía personalizada, POR DEFINIR
 val AppTypography = Typography(
     headlineLarge = TextStyle(
         fontWeight = FontWeight.Bold,
@@ -23,7 +23,7 @@ val AppTypography = Typography(
     bodyLarge = TextStyle(fontSize = 16.sp)
 )
 
-// La función que aplica el tema globalmente
+// Tema de la aplicación usando Material 3 con los colores y tipografía definidos
 @Composable
 fun MVVMMaterialAppTheme(content: @Composable () -> Unit) {
     MaterialTheme(
