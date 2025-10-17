@@ -4,11 +4,14 @@
 
     <application
         android:allowBackup="true"
-        android:label="MVVMMaterialApp"
+        android:icon="@mipmap/ic_launcher"
+        android:label="DuocDesk"
         android:supportsRtl="true"
-        android:theme="@style/Theme.DuocDesk">
+        android:theme="@style/Theme.App.Starting">
         <activity android:name="com.example.duocdesk.MainActivity"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>

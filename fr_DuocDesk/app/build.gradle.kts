@@ -13,7 +13,8 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = 1
-        versionName = "1.0"
+        // La versión de la aplicación en formato mayor.menor.parche
+        versionName = "0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -61,18 +62,21 @@ dependencies {
 
 
     // Material Design 3 en Compose
-    implementation("androidx.compose.material3:material3:1.4.0")
+    implementation(libs.androidx.compose.material3)
     // UI base en Compose
-    implementation("androidx.compose.ui:ui:1.9.3")
+    implementation(libs.androidx.compose.ui)
     // Vista previa de UI en Android Studio
-    implementation("androidx.compose.ui:ui-tooling-preview:1.9.3")
+    implementation(libs.androidx.compose.ui.tooling.preview)
     // ViewModel en Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.9.4")
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
     // Iconos de Material
-    implementation("androidx.compose.material:material-icons-extended:1.7.8")
+    implementation(libs.androidx.compose.material.icons.extended)
 
     // Herramientas para debug UI
-    debugImplementation("androidx.compose.ui:ui-tooling:1.9.3")
+    debugImplementation(libs.androidx.compose.ui.tooling)
     // Testing
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.9.3")
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
+
+    // Splash Screen API: para pantallas de bienvenida animadas
+    implementation(libs.androidx.core.splashscreen)
 }

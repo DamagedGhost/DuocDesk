@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.duocdesk"
     android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionName="0.1" >
 
     <uses-sdk
         android:minSdkVersion="24"
@@ -19,13 +19,15 @@
         android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:debuggable="true"
         android:extractNativeLibs="false"
-        android:label="MVVMMaterialApp"
+        android:icon="@mipmap/ic_launcher"
+        android:label="DuocDesk"
         android:supportsRtl="true"
         android:testOnly="true"
-        android:theme="@style/Theme.DuocDesk" >
+        android:theme="@style/Theme.App.Starting" >
         <activity
             android:name="com.example.duocdesk.MainActivity"
-            android:exported="true" >
+            android:exported="true"
+            android:theme="@style/Theme.App.Starting" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,4 +1,4 @@
-package com.example.duocdesk.ui.theme
+package com.example.duocdesk.view
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
