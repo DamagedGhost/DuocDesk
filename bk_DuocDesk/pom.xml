@@ -84,6 +84,21 @@
 		</dependency>
 	</dependencies>
 
+	<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jdbc</artifactId>
+</dependency>
+<dependency>
+    <groupId>com.oracle.database.spring</groupId>
+    <artifactId>oracle-spring-boot-starter-ucp</artifactId>
+    <version>24.4.0</version> <!-- Use the appropriate version -->
+</dependency>
+<dependency>
+    <groupId>com.oracle.database.spring</groupId>
+    <artifactId>oracle-spring-boot-starter-wallet</artifactId>
+    <version>24.4.0</version> <!-- Use the appropriate version -->
+</dependency>
+
 	<build>
 		<plugins>
 			<plugin>
