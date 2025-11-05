@@ -4,35 +4,47 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import java.util.Set; // Importamos Set para las colecciones de relaciones
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity // <-- CAMBIO: De @MappedSuperclass a @Entity
-@Table(name = "USUARIO", schema = "ADMIN") // <-- AÑADIDO: Para apuntar a tu tabla
+@Entity // Le dice a JPA que esta clase es una entidad que debe mapear a una tabla
+@Table(name = "USUARIO", schema = "ADMIN") // Vincula esta clase a la tabla exacta
 public class Usuario {
 
-    @Column(name = "CORREO")
-    private String CORREO;
-
-    @Id
-    // @GeneratedValue(strategy = GenerationType.IDENTITY) <-- ELIMINADO: Tu DDL no muestra auto-incremento.
-    // El ID se deberá proveer manualmente al crear un usuario.
+    @Id // Marca este campo como la Clave Primaria (PK)
     @Column(name = "ID_USUARIO")
-    private int ID_USUARIO; // O usa Long si el número puede ser muy grande
+    private int idUsuario;
+
+    @Column(name = "CORREO")
+    private String correo;
 
     @Column(name = "NOMBRE")
-    private String NOMBRE;
+    private String nombre;
 
     @Column(name = "APELLIDO")
-    private String APELLIDO;
+    private String apellido;
 
     @Column(name = "EDAD")
-    private int EDAD;
+    private int edad;
 
     @Column(name = "CARRERA")
-    private String CARRERA;
+    private String carrera;
 
     @Column(name = "CONTRASENA")
-    private String CONTRASENA;
+    private String contrasena;
+
+    // --- Definición de Relaciones (el otro lado) ---
+
+    // @OneToMany: Un Usuario puede tener muchas (Many) relaciones "UsuarioTableroRol".
+    // "mappedBy = "usuario"": Le dice a JPA que la entidad "UsuarioTableroRol"
+    // es la dueña de esta relación, en su campo llamado "usuario".
+
+    // --- Relaciones ---
+    @OneToMany(mappedBy = "usuario")
+    private Set<UsuarioTableroRol> rolesEnTableros; // <-- CAMBIO: UTR a UsuarioTableroRol
+
+    @OneToMany(mappedBy = "usuario")
+    private Set<Favorito> favoritos;
 }
