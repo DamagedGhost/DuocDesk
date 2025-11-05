@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">DuocDesk</string>
+    <string name="correo_ejemplo_com">correo@ejemplo.com</string>
+    <string name="nombre_apellido">Nombre Apellido</string>
 </resources>

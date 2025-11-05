@@ -9,6 +9,8 @@
     <color name="teal_700">#FF018786</color>
     <color name="white">#FFFFFFFF</color>
     <string name="app_name">DuocDesk</string>
+    <string name="correo_ejemplo_com">correo@ejemplo.com</string>
+    <string name="nombre_apellido">Nombre Apellido</string>
     <style name="Theme.AnimatedSplashScreen" parent="android:Theme.Material.Light.NoActionBar"/>
     <style name="Theme.App.Starting" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">@color/black</item>
