@@ -1,6 +1,7 @@
 R_DEF: Internal format may change without notice
 local
 color black
+color ic_launcher_background
 color purple_200
 color purple_500
 color purple_700
@@ -10,9 +11,21 @@ color white
 drawable duoc_desk
 drawable ic_launcher_background
 drawable ic_launcher_foreground
+id progressBar
+id recyclerViewUsuarios
+id textViewCorreo
+id textViewError
+id textViewNombre
+layout activity_main
+layout list_item_usuario
 mipmap ic_launcher
+mipmap ic_launcher_foreground
 mipmap ic_launcher_round
 string app_name
-style Theme.DuocDesk
+string correo_ejemplo_com
+string nombre_apellido
+style Theme.AnimatedSplashScreen
+style Theme.App.Starting
 xml backup_rules
 xml data_extraction_rules
+xml network_security_config

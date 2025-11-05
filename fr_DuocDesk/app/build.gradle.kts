@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id("com.google.devtools.ksp") // Aplicar el plugin
 }
 
 android {
@@ -79,4 +80,27 @@ dependencies {
 
     // Splash Screen API: para pantallas de bienvenida animadas
     implementation(libs.androidx.core.splashscreen)
+
+    // Dependencias para consumo de API RESTful (backend Duoc Desk / API externas)
+    // Retrofit & Gson Converter
+    implementation("com.squareup.retrofit2:retrofit:2.9.0") // O la versión más reciente
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0") // O la versión más reciente
+
+    // ViewModel & LiveData (Lifecycle)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1") // O la versión más reciente
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.5.1") // O la versión más reciente
+    implementation("androidx.activity:activity-ktx:1.6.1") // Para 'viewModels()' delegate
+
+    // Coroutines (para llamadas asíncronas)
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4") // O la versión más reciente
+
+    // RecyclerView
+    implementation("androidx.recyclerview:recyclerview:1.2.1") // O la versión más reciente
+
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
+    // Room
+    implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1") // Para Coroutines
+    ksp("androidx.room:room-compiler:2.6.1") // Procesador de anotaciones
 }
