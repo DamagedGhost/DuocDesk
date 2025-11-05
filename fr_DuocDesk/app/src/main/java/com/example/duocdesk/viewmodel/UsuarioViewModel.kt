@@ -17,7 +17,7 @@ class UsuarioViewModel : ViewModel() {
 
     // LiveData para manejar errores (puedes hacerlo más sofisticado)
     private val _error = MutableLiveData<String?>()
-    val error: LiveData<String> get() = _error as LiveData<String>
+    val error: LiveData<String?> get() = _error
 
     // LiveData para el estado de carga
     private val _isLoading = MutableLiveData<Boolean>()

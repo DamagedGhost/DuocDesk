@@ -11,13 +11,6 @@ color white
 drawable duoc_desk
 drawable ic_launcher_background
 drawable ic_launcher_foreground
-id progressBar
-id recyclerViewUsuarios
-id textViewCorreo
-id textViewError
-id textViewNombre
-layout activity_main
-layout list_item_usuario
 mipmap ic_launcher
 mipmap ic_launcher_foreground
 mipmap ic_launcher_round

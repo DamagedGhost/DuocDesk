@@ -61,7 +61,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-
+    implementation("androidx.compose.runtime:runtime-livedata")
     // Material Design 3 en Compose
     implementation(libs.androidx.compose.material3)
     // UI base en Compose

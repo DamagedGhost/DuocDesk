@@ -10,64 +10,33 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.recyclerview.widget.RecyclerView
-import com.example.duocdesk.network.UsuarioAdapter
 import com.example.duocdesk.ui.theme.MVVMMaterialAppTheme
 import com.example.duocdesk.view.WelcomeScreen
 import com.example.duocdesk.viewmodel.UsuarioViewModel
 import com.example.duocdesk.viewmodel.WelcomeViewModel
 
+import androidx.activity.compose.setContent
+import com.example.duocdesk.ui.theme.MVVMMaterialAppTheme
+// 1. Importa tu NUEVA pantalla
+import com.example.duocdesk.view.UserListScreen
+
+// Ya no necesitas 'UsuarioViewModel' aquí, ni 'RecyclerView', 'ProgressBar', etc.
 class MainActivity : ComponentActivity() {
-    // Inyecta el ViewModel usando el delegate 'viewModels()'
-    private val usuarioViewModel: UsuarioViewModel by viewModels()
-    private lateinit var usuarioAdapter: UsuarioAdapter
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var progressBar: ProgressBar
-    private lateinit var errorTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-        // Inicializar vistas
-        recyclerView = findViewById(R.id.recyclerViewUsuarios)
-        progressBar = findViewById(R.id.progressBar)
-        errorTextView = findViewById(R.id.textViewError)
-
-        // Configurar RecyclerView
-        setupRecyclerView()
-
-        // Observar los LiveData del ViewModel
-        observeViewModel()
-    }
-
-    private fun setupRecyclerView() {
-        // Inicializa el adaptador con una lista vacía
-        usuarioAdapter = UsuarioAdapter(emptyList())
-        recyclerView.adapter = usuarioAdapter
-        // No es necesario definir el LayoutManager aquí si ya lo hiciste en XML
-        // recyclerView.layoutManager = LinearLayoutManager(this)
-    }
-
-    private fun observeViewModel() {
-        // Observa cambios en la lista de usuarios
-        usuarioViewModel.usuarios.observe(this) { usuarios ->
-            // Actualiza el adaptador cuando la lista cambia
-            usuarioAdapter.updateUsuarios(usuarios ?: emptyList()) // Maneja lista nula
-        }
-
-        // Observa cambios en el estado de carga
-        usuarioViewModel.isLoading.observe(this) { isLoading ->
-            progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
-        }
-
-        // Observa si hay errores
-        usuarioViewModel.error.observe(this) { errorMsg ->
-            if (errorMsg != null) {
-                errorTextView.text = errorMsg
-                errorTextView.visibility = View.VISIBLE
-            } else {
-                errorTextView.visibility = View.GONE
+        // 2. setContent es el punto de entrada de Compose
+        setContent {
+            // Configura tu tema personalizado
+            MVVMMaterialAppTheme {
+                // 3. Llama a tu nueva pantalla Composable.
+                // ¡Y eso es todo!
+                UserListScreen()
             }
         }
     }
+
+    // Todos los métodos antiguos (setupRecyclerView, observeViewModel)
+    // se pueden eliminar. La lógica ahora vive en UserListScreen.kt
 }
