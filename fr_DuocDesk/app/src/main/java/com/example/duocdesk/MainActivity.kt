@@ -17,6 +17,7 @@ import com.example.duocdesk.viewmodel.WelcomeViewModel
 
 import androidx.activity.compose.setContent
 import com.example.duocdesk.ui.theme.MVVMMaterialAppTheme
+import com.example.duocdesk.view.LoginScreen
 // 1. Importa tu NUEVA pantalla
 import com.example.duocdesk.view.UserListScreen
 
@@ -32,7 +33,7 @@ class MainActivity : ComponentActivity() {
             MVVMMaterialAppTheme {
                 // 3. Llama a tu nueva pantalla Composable.
                 // ¡Y eso es todo!
-                UserListScreen()
+                LoginScreen()
             }
         }
     }
