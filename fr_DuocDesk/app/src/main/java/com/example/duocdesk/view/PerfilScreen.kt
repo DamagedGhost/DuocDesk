@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.duocdesk.viewmodel.PerfilViewModel
@@ -123,4 +124,10 @@ fun PerfilItem(text: String) {
         Text(text, fontSize = 18.sp)
         Divider()
     }
+}
+
+@Preview
+@Composable
+fun PerfilScreenPreview() {
+    PerfilScreen()
 }

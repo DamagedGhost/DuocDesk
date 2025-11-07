@@ -49,13 +49,13 @@ fun FavoritosScreen(
                 containerColor = Color(0xFFFFF9C4),
                 contentColor = Color.Black
             ) {
-                IconButton(onClick = { navController.navigate("buscar") }, modifier = Modifier.weight(1f)) {
+                AnimatedIconButton(onClick = { navController.navigate("buscar") }, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Search, contentDescription = "Buscar")
                 }
-                IconButton(onClick = { navController.navigate("favoritos") }, modifier = Modifier.weight(1f)) {
+                AnimatedIconButton(onClick = { navController.navigate("favoritos") }, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Favorite, contentDescription = "Favoritos")
                 }
-                IconButton(onClick = {}, modifier = Modifier.weight(1f)) {
+                AnimatedIconButton(onClick = {}, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.FilterList, contentDescription = "Filtrar")
                 }
             }
@@ -78,7 +78,7 @@ fun FavoritosScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    IconButton(onClick = onPerfilClick) {
+                    AnimatedIconButton(onClick = onPerfilClick) {
                         if (photoUri != null) {
                             AsyncImage(
                                 model = photoUri,

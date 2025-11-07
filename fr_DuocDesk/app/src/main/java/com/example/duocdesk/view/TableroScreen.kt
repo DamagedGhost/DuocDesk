@@ -1,5 +1,13 @@
 package com.example.duocdesk.view
 
+
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.graphicsLayer
+import com.example.duocdesk.view.AnimatedIconButton
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -7,6 +15,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -49,13 +58,13 @@ fun TableroScreen(
                 containerColor = Color(0xFFFFF9C4),
                 contentColor = Color.Black
             ) {
-                IconButton(onClick = onBuscarClick, modifier = Modifier.weight(1f)) {
+                AnimatedIconButton(onClick = onBuscarClick, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Search, contentDescription = "Buscar")
                 }
-                IconButton(onClick = onFavoritosClick, modifier = Modifier.weight(1f)) {
+                AnimatedIconButton(onClick = onFavoritosClick, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Favorite, contentDescription = "Favoritos")
                 }
-                IconButton(onClick = onFiltrarClick, modifier = Modifier.weight(1f)) {
+                AnimatedIconButton(onClick = onFiltrarClick, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.FilterList, contentDescription = "Filtrar")
                 }
             }
@@ -78,7 +87,7 @@ fun TableroScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    IconButton(onClick = onPerfilClick) {
+                    AnimatedIconButton(onClick = onPerfilClick) {
                         if (photoUri != null) {
                             AsyncImage(
                                 model = photoUri,
@@ -90,7 +99,7 @@ fun TableroScreen(
                             )
                         } else {
                             Icon(
-                                Icons.Default.Search,
+                                Icons.Default.Person,
                                 contentDescription = "Perfil",
                                 tint = Color.Black
                             )

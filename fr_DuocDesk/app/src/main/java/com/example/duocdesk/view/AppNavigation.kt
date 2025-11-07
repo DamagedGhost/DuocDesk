@@ -1,5 +1,11 @@
 package com.example.duocdesk.view
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -8,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.duocdesk.viewmodel.LoginViewModel
 import com.example.duocdesk.viewmodel.RegisterViewModel
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavigation() {
     val navController = rememberNavController()
@@ -18,7 +25,11 @@ fun AppNavigation() {
     ) {
 
 // Pantalla de Login
-        composable("login") {
+        composable("login",
+            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
+            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
+            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
+            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }) {
             // El VM se crea aquí. Como es un AndroidViewModel,
             // el sistema le pasa el 'Application' context automáticamente.
             val viewModel: LoginViewModel = viewModel()
@@ -38,7 +49,11 @@ fun AppNavigation() {
         }
 
         // Pantalla de Registro
-        composable("register") {
+        composable("register",
+            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
+            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
+            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
+            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }) {
             val viewModel: RegisterViewModel = viewModel()
 
             RegisterScreen(
@@ -56,7 +71,11 @@ fun AppNavigation() {
         }
 
         // Pantalla del Tablero
-        composable("tablero") {
+        composable("tablero",
+            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
+            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
+            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
+            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }) {
             TableroScreen(
                 onPerfilClick = { navController.navigate("perfil") },
                 onBuscarClick = { navController.navigate("buscar") },
@@ -66,7 +85,11 @@ fun AppNavigation() {
         }
 
         // Pantalla del Perfil
-        composable("perfil") {
+        composable("perfil",
+            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
+            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
+            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
+            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }) {
             PerfilScreen(
                 onCloseClick = {
                     navController.popBackStack()
@@ -75,7 +98,11 @@ fun AppNavigation() {
         }
 
         // Pantalla de busqueda
-        composable("buscar") {
+        composable("buscar",
+            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
+            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
+            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
+            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }) {
             BuscarScreen(
                 navController = navController,
                 onBackClick = { navController.popBackStack() }
@@ -83,7 +110,11 @@ fun AppNavigation() {
         }
 
         // Resultados de busqueda
-        composable("search_result") {
+        composable("search_result",
+            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
+            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
+            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
+            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }) {
             SearchResultScreen(
                 navController = navController,
                 onPerfilClick = { navController.navigate("perfil") },
@@ -92,7 +123,11 @@ fun AppNavigation() {
         }
 
         // Favoritos
-        composable("favoritos") {
+        composable("favoritos",
+            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
+            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
+            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
+            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }) {
             FavoritosScreen(
                 navController = navController,
                 onPerfilClick = { navController.navigate("perfil") },
@@ -101,7 +136,11 @@ fun AppNavigation() {
         }
 
         // Detalle de tablero
-        composable("detail") {
+        composable("detail",
+            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
+            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
+            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
+            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }) {
             DetailScreen(
                 onPerfilClick = { navController.navigate("perfil") },
                 onBackClick = { navController.popBackStack() }
