@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -11,16 +12,22 @@ import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.duocdesk.R
+import com.example.duocdesk.viewmodel.PerfilViewModel
 
 @Composable
 fun SearchResultScreen(
@@ -28,6 +35,14 @@ fun SearchResultScreen(
     onPerfilClick: () -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
+    val context = LocalContext.current
+    val viewModel: PerfilViewModel = viewModel()
+    val photoUri by viewModel.photoUri.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadSavedPhoto(context)
+    }
+
     Scaffold(
         bottomBar = {
             BottomAppBar(
@@ -45,7 +60,6 @@ fun SearchResultScreen(
                 }
             }
         }
-
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -53,7 +67,6 @@ fun SearchResultScreen(
                 .background(Color(0xFFDCEFFF))
                 .padding(paddingValues)
         ) {
-            // Encabezado
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -66,7 +79,18 @@ fun SearchResultScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(onClick = onPerfilClick) {
-                        Icon(Icons.Filled.Person, contentDescription = "Perfil", tint = Color.Black)
+                        if (photoUri != null) {
+                            AsyncImage(
+                                model = photoUri,
+                                contentDescription = "Perfil",
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                        } else {
+                            Icon(Icons.Filled.Person, contentDescription = "Perfil", tint = Color.Black)
+                        }
                     }
 
                     Text("Resultados", fontSize = 22.sp, fontWeight = FontWeight.Bold)
@@ -75,8 +99,6 @@ fun SearchResultScreen(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            // Campo de busqueda
             OutlinedTextField(
                 value = "DuocDesk",
                 onValueChange = {},
@@ -88,7 +110,6 @@ fun SearchResultScreen(
             )
 
             Spacer(modifier = Modifier.height(16.dp))
-
             Text(
                 text = "2 Tableros encontrados",
                 fontSize = 16.sp,
@@ -97,8 +118,6 @@ fun SearchResultScreen(
             )
 
             Spacer(modifier = Modifier.height(12.dp))
-
-            // Tarjeta principal (DuocDesk)
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -116,7 +135,6 @@ fun SearchResultScreen(
                             .fillMaxWidth()
                             .height(150.dp)
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
                     Text("DuocDesk", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                     Text(
@@ -124,32 +142,6 @@ fun SearchResultScreen(
                         fontSize = 14.sp,
                         color = Color.DarkGray
                     )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Tarjeta secundaria (Demo)
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
-                            .background(Color.LightGray),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text("Imagen")
-                    }
-
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("Demo", fontWeight = FontWeight.Bold)
                 }
             }
         }

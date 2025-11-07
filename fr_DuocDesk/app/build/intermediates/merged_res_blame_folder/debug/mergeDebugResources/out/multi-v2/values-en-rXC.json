@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.duocdesk.app-mergeDebugResources-52:/values-en-rXC/values-en-rXC.xml",
+            "outputFile": "com.example.duocdesk.app-mergeDebugResources-65:/values-en-rXC/values-en-rXC.xml",
             "map": [
                 {
                     "source": "C:\\Users\\CAFE DIGITAL\\.gradle\\caches\\8.13\\transforms\\343134c870687c41c0875a9cda21d9a8\\transformed\\ui-release\\res\\values-en-rXC\\values-en-rXC.xml",
@@ -72,7 +72,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\CAFE DIGITAL\\.gradle\\caches\\8.13\\transforms\\b5050d36409be9fb43b308a17f9a67d2\\transformed\\appcompat-1.2.0\\res\\values-en-rXC\\values-en-rXC.xml",
+                    "source": "C:\\Users\\CAFE DIGITAL\\.gradle\\caches\\8.13\\transforms\\3c468940408d6a362b467f4a74b9e4f6\\transformed\\appcompat-1.6.1\\res\\values-en-rXC\\values-en-rXC.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29",
                         "startColumns": "4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4",

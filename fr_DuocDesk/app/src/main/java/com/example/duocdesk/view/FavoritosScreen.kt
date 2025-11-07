@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -11,16 +12,22 @@ import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.example.duocdesk.R
+import com.example.duocdesk.viewmodel.PerfilViewModel
 
 @Composable
 fun FavoritosScreen(
@@ -28,6 +35,14 @@ fun FavoritosScreen(
     onPerfilClick: () -> Unit = {},
     onBackClick: () -> Unit = {}
 ) {
+    val context = LocalContext.current
+    val viewModel: PerfilViewModel = viewModel()
+    val photoUri by viewModel.photoUri.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadSavedPhoto(context)
+    }
+
     Scaffold(
         bottomBar = {
             BottomAppBar(
@@ -52,7 +67,6 @@ fun FavoritosScreen(
                 .background(Color(0xFFDCEFFF))
                 .padding(paddingValues)
         ) {
-            // Encabezado superior
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -65,7 +79,18 @@ fun FavoritosScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(onClick = onPerfilClick) {
-                        Icon(Icons.Filled.Person, contentDescription = "Perfil", tint = Color.Black)
+                        if (photoUri != null) {
+                            AsyncImage(
+                                model = photoUri,
+                                contentDescription = "Perfil",
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                        } else {
+                            Icon(Icons.Filled.Person, contentDescription = "Perfil", tint = Color.Black)
+                        }
                     }
 
                     Text("Favoritos", fontSize = 22.sp, fontWeight = FontWeight.Bold)
@@ -74,7 +99,6 @@ fun FavoritosScreen(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-
             Text(
                 text = "Has marcado 3 tableros",
                 fontSize = 16.sp,
@@ -83,8 +107,6 @@ fun FavoritosScreen(
             )
 
             Spacer(modifier = Modifier.height(12.dp))
-
-            // Tarjetas de favoritos
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -96,13 +118,11 @@ fun FavoritosScreen(
                     imagen = R.drawable.duoc_desk,
                     onClick = { navController.navigate("detail") }
                 )
-
                 FavoritoCard(
                     titulo = "InVET",
                     imagen = R.drawable.duoc_desk,
                     onClick = { navController.navigate("detail") }
                 )
-
                 FavoritoCard(
                     titulo = "Demo",
                     imagen = R.drawable.ic_launcher_foreground,

@@ -3,23 +3,38 @@ package com.example.duocdesk.view
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Share
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
 import com.example.duocdesk.R
+import com.example.duocdesk.viewmodel.PerfilViewModel
 
 @Composable
 fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
+    val context = LocalContext.current
+    val viewModel: PerfilViewModel = viewModel()
+    val photoUri by viewModel.photoUri.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.loadSavedPhoto(context)
+    }
+
     Scaffold(
         bottomBar = {
             BottomAppBar(
@@ -27,14 +42,10 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
                 contentColor = Color.Black
             ) {
                 IconButton(onClick = onBackClick, modifier = Modifier.weight(1f)) {
-                    Icon(Icons.Filled.Settings, contentDescription = "")
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("", fontSize = 12.sp)
+                    Icon(Icons.Filled.Settings, contentDescription = "Configuración")
                 }
                 IconButton(onClick = {}, modifier = Modifier.weight(1f)) {
-                    Icon(Icons.Filled.Share, contentDescription = "")
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Text("", fontSize = 12.sp)
+                    Icon(Icons.Filled.Share, contentDescription = "Compartir")
                 }
             }
         }
@@ -45,7 +56,6 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
                 .background(Color(0xFFDCEFFF))
                 .padding(paddingValues)
         ) {
-            // Encabezado amarillo
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -58,7 +68,18 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     IconButton(onClick = onPerfilClick) {
-                        Icon(Icons.Filled.Person, contentDescription = "Perfil", tint = Color.Black)
+                        if (photoUri != null) {
+                            AsyncImage(
+                                model = photoUri,
+                                contentDescription = "Perfil",
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(CircleShape),
+                                contentScale = ContentScale.Crop
+                            )
+                        } else {
+                            Icon(Icons.Filled.Person, contentDescription = "Perfil", tint = Color.Black)
+                        }
                     }
 
                     Text("DuocDesk", fontSize = 22.sp, fontWeight = FontWeight.Bold)
@@ -67,8 +88,6 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
             }
 
             Spacer(modifier = Modifier.height(16.dp))
-
-            // Imagen de proyecto
             Image(
                 painter = painterResource(id = R.drawable.duoc_desk),
                 contentDescription = "Imagen de DuocDesk",
@@ -79,8 +98,6 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
             )
 
             Spacer(modifier = Modifier.height(12.dp))
-
-            // Informacion
             Text(
                 text = "demo@duocuc.cl",
                 fontSize = 16.sp,
@@ -89,7 +106,6 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
             )
 
             Spacer(modifier = Modifier.height(8.dp))
-
             Text(
                 text = "Tablero de trabajo DuocDesk. Software de gestión de tableros y tareas colaborativas para equipos de estudiantes.",
                 fontSize = 14.sp,
@@ -98,8 +114,6 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
             )
 
             Spacer(modifier = Modifier.height(32.dp))
-
-            // Espacio visual
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
