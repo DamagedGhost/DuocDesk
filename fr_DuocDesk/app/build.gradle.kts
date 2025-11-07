@@ -103,4 +103,6 @@ dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1") // Para Coroutines
     ksp("androidx.room:room-compiler:2.6.1") // Procesador de anotaciones
+    implementation("androidx.navigation:navigation-compose:2.7.4") //navegacion entre interfaces
+
 }

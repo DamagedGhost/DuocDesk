@@ -37,7 +37,7 @@ fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // 🔹 Logo superior
+            //  Logo superior
             Image(
                 painter = painterResource(id = R.drawable.duoc_desk),
                 contentDescription = "Logo DuocDesk",
@@ -55,7 +55,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 🔹 Campo de email
+            // Correo
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
@@ -68,7 +68,7 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 🔹 Campo de contraseña
+            //  Contraseña
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
@@ -81,13 +81,13 @@ fun LoginScreen(
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 🔹 Botón de inicio de sesión
+            // Boton para iniciar sesion
             Button(
                 onClick = { onLoginClick(email, password) },
                 modifier = Modifier.fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
             ) {
-                Text(text = "Iniciar Sesión", color = Color.White)
+                Text(text = "Iniciar Sesion", color = Color.White)
             }
 
             Spacer(modifier = Modifier.height(16.dp))

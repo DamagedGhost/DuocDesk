@@ -4,6 +4,11 @@ ADDED from C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\
 INJECTED from C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:2:1-26:12
 INJECTED from C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:2:1-26:12
 INJECTED from C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:2:1-26:12
+MERGED from [androidx.navigation:navigation-common:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\3d407c4815b11f5fb51f4abac2002134\transformed\navigation-common-2.7.4\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.navigation:navigation-runtime:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\7cbf860cddf2536596cd0ada807cfcc4\transformed\navigation-runtime-2.7.4\AndroidManifest.xml:17:1-22:12
+MERGED from [androidx.navigation:navigation-common-ktx:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\193bf12e6076d9aefb6b31fcc9ff76b9\transformed\navigation-common-ktx-2.7.4\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.navigation:navigation-runtime-ktx:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\642f46cdae25e53fbd8ad32bff7daf5d\transformed\navigation-runtime-ktx-2.7.4\AndroidManifest.xml:2:1-7:12
+MERGED from [androidx.navigation:navigation-compose:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\43c894d6a62b00e29cd9e48f5f0d522a\transformed\navigation-compose-2.7.4\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.material:material-android:1.9.3] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\c47c82b9e18453518578fe186ceb591b\transformed\material\AndroidManifest.xml:2:1-7:12
 MERGED from [androidx.compose.material3:material3-android:1.4.0] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\9bd5617937bce5e659e0fc9bdf96dcc2\transformed\material3\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.compose.foundation:foundation-layout-android:1.9.3] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\924906ae077d687abd0af2e6ced46bc0\transformed\foundation-layout\AndroidManifest.xml:2:1-7:12
@@ -151,6 +156,16 @@ uses-sdk
 INJECTED from C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml
 INJECTED from C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml
+MERGED from [androidx.navigation:navigation-common:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\3d407c4815b11f5fb51f4abac2002134\transformed\navigation-common-2.7.4\AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-common:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\3d407c4815b11f5fb51f4abac2002134\transformed\navigation-common-2.7.4\AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-runtime:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\7cbf860cddf2536596cd0ada807cfcc4\transformed\navigation-runtime-2.7.4\AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-runtime:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\7cbf860cddf2536596cd0ada807cfcc4\transformed\navigation-runtime-2.7.4\AndroidManifest.xml:20:5-44
+MERGED from [androidx.navigation:navigation-common-ktx:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\193bf12e6076d9aefb6b31fcc9ff76b9\transformed\navigation-common-ktx-2.7.4\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-common-ktx:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\193bf12e6076d9aefb6b31fcc9ff76b9\transformed\navigation-common-ktx-2.7.4\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-runtime-ktx:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\642f46cdae25e53fbd8ad32bff7daf5d\transformed\navigation-runtime-ktx-2.7.4\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-runtime-ktx:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\642f46cdae25e53fbd8ad32bff7daf5d\transformed\navigation-runtime-ktx-2.7.4\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-compose:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\43c894d6a62b00e29cd9e48f5f0d522a\transformed\navigation-compose-2.7.4\AndroidManifest.xml:5:5-44
+MERGED from [androidx.navigation:navigation-compose:2.7.4] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\43c894d6a62b00e29cd9e48f5f0d522a\transformed\navigation-compose-2.7.4\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.material:material-android:1.9.3] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\c47c82b9e18453518578fe186ceb591b\transformed\material\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.material:material-android:1.9.3] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\c47c82b9e18453518578fe186ceb591b\transformed\material\AndroidManifest.xml:5:5-44
 MERGED from [androidx.compose.material3:material3-android:1.4.0] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\9bd5617937bce5e659e0fc9bdf96dcc2\transformed\material3\AndroidManifest.xml:20:5-44
