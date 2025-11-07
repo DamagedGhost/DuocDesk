@@ -1,9 +1,12 @@
 package com.example.duocdesk.view
 
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.duocdesk.viewmodel.LoginViewModel
+import com.example.duocdesk.viewmodel.RegisterViewModel
 
 @Composable
 fun AppNavigation() {
@@ -14,26 +17,40 @@ fun AppNavigation() {
         startDestination = "login"
     ) {
 
-        // Pantalla de Login
+// Pantalla de Login
         composable("login") {
+            // El VM se crea aquí. Como es un AndroidViewModel,
+            // el sistema le pasa el 'Application' context automáticamente.
+            val viewModel: LoginViewModel = viewModel()
+
             LoginScreen(
-                onLoginClick = { email, password ->
-                    navController.navigate("tablero")
+                viewModel = viewModel,
+                onLoginSuccess = {
+                    navController.navigate("tablero") {
+                        popUpTo("login") { inclusive = true } // Limpia la pila
+                    }
                 },
                 onCreateAccountClick = {
                     navController.navigate("register")
                 }
+                // onRecoverPasswordClick se maneja por defecto
             )
         }
 
         // Pantalla de Registro
         composable("register") {
+            val viewModel: RegisterViewModel = viewModel()
+
             RegisterScreen(
-                onRegisterClick = { nombre, apellido, correo, password ->
-                    navController.navigate("login")
+                viewModel = viewModel,
+                onRegisterSuccess = {
+                    // Vuelve a login después del registro
+                    navController.navigate("login") {
+                        popUpTo("login") { inclusive = true }
+                    }
                 },
                 onBackToLoginClick = {
-                    navController.navigate("login")
+                    navController.popBackStack() // Vuelve atrás
                 }
             )
         }
