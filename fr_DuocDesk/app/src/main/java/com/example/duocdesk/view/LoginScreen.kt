@@ -1,5 +1,6 @@
 package com.example.duocdesk.view
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -15,92 +16,114 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.duocdesk.R
+import com.example.duocdesk.viewmodel.LoginViewModel
 
 @Composable
 fun LoginScreen(
-    onLoginClick: (String, String) -> Unit = { _, _ -> },
+    onLoginSuccess: () -> Unit = {}, // <-- Lambda para navegar
     onCreateAccountClick: () -> Unit = {},
-    onRecoverPasswordClick: () -> Unit = {}
+    onRecoverPasswordClick: () -> Unit = {},
+    viewModel: LoginViewModel = viewModel() // <-- Obtenemos el VM
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
+    // 1. Recogemos el estado (UiState) del ViewModel
+    val uiState by viewModel.uiState.collectAsState()
+
+    // 2. Si el login fue exitoso, mostramos el diálogo
+    if (uiState.loginSuccess) {
+        SuccessDialog(
+            onDismiss = onLoginSuccess, // Al cerrar, navegamos
+            title = "¡Bienvenido!",
+            message = "Inicio de sesión exitoso. Serás dirigido al tablero."
+        )
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 24.dp),
+            modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // 🔹 Logo superior
+            // ... (Logo y Título se quedan igual) ...
             Image(
                 painter = painterResource(id = R.drawable.duoc_desk),
                 contentDescription = "Logo DuocDesk",
                 modifier = Modifier.size(120.dp)
             )
-
             Spacer(modifier = Modifier.height(16.dp))
-
             Text(
                 text = "Ingresar Cuenta",
                 fontSize = 22.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center
             )
-
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 🔹 Campo de email
+            // 3. CAMPO CORREO
             OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
+                value = uiState.email, // <-- Conectado al VM
+                onValueChange = viewModel::onEmailChange, // <-- Evento al VM
                 label = { Text("Email") },
-                placeholder = { Text("name@example.com") },
                 singleLine = true,
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth(),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
+                isError = uiState.errores.email != null || uiState.errores.general != null, // <-- Conectado al VM
+                supportingText = {
+                    AnimatedVisibility(uiState.errores.email != null) {
+                        Text(uiState.errores.email ?: "")
+                    }
+                    // Mostramos el error general (ej. credenciales) aquí también
+                    AnimatedVisibility(uiState.errores.general != null) {
+                        Text(uiState.errores.general ?: "")
+                    }
+                }
             )
-
             Spacer(modifier = Modifier.height(12.dp))
 
-            // 🔹 Campo de contraseña
+            // 4. CAMPO CONTRASEÑA
             OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
+                value = uiState.password,
+                onValueChange = viewModel::onPasswordChange,
                 label = { Text("Contraseña") },
-                placeholder = { Text("********") },
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                isError = uiState.errores.password != null,
+                supportingText = {
+                    AnimatedVisibility(uiState.errores.password != null) {
+                        Text(uiState.errores.password ?: "")
+                    }
+                }
             )
-
             Spacer(modifier = Modifier.height(20.dp))
 
-            // 🔹 Botón de inicio de sesión
+            // 5. BOTÓN DE LOGIN
             Button(
-                onClick = { onLoginClick(email, password) },
+                onClick = viewModel::onLoginClick, // <-- Evento al VM
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+                enabled = !uiState.isLoading // Se deshabilita mientras carga
             ) {
-                Text(text = "Iniciar Sesión", color = Color.White)
+                if (uiState.isLoading) {
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = Color.White)
+                } else {
+                    Text(text = "Iniciar Sesion", color = Color.White)
+                }
             }
 
+            // ... (Resto de botones) ...
             Spacer(modifier = Modifier.height(16.dp))
-
-            TextButton(onClick = onRecoverPasswordClick) {
+            TextButton(onClick = onRecoverPasswordClick, enabled = !uiState.isLoading) {
                 Text("Recuperar Contraseña")
             }
-
             Spacer(modifier = Modifier.height(8.dp))
-
             OutlinedButton(
                 onClick = onCreateAccountClick,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                enabled = !uiState.isLoading
             ) {
                 Text("Crear Cuenta")
             }
