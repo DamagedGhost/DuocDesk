@@ -46,8 +46,8 @@ fun FavoritosScreen(
     Scaffold(
         bottomBar = {
             BottomAppBar(
-                containerColor = Color(0xFFFFF9C4),
-                contentColor = Color.Black
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
             ) {
                 AnimatedIconButton(onClick = { navController.navigate("buscar") }, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Search, contentDescription = "Buscar")
@@ -64,13 +64,13 @@ fun FavoritosScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFDCEFFF))
+                .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFFFF9C4))
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 Row(
@@ -89,7 +89,7 @@ fun FavoritosScreen(
                                 contentScale = ContentScale.Crop
                             )
                         } else {
-                            Icon(Icons.Filled.Person, contentDescription = "Perfil", tint = Color.Black)
+                            Icon(Icons.Filled.Person, contentDescription = "Perfil", tint = MaterialTheme.colorScheme.onSurface)
                         }
                     }
 
@@ -102,7 +102,7 @@ fun FavoritosScreen(
             Text(
                 text = "Has marcado 3 tableros",
                 fontSize = 16.sp,
-                color = Color.DarkGray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 
@@ -140,7 +140,7 @@ fun FavoritoCard(titulo: String, imagen: Int, onClick: () -> Unit) {
             .fillMaxWidth()
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(

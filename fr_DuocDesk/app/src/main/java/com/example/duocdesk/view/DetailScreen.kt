@@ -25,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.duocdesk.R
 import com.example.duocdesk.viewmodel.PerfilViewModel
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
@@ -39,13 +40,13 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
     Scaffold(
         bottomBar = {
             BottomAppBar(
-                containerColor = Color(0xFFFFF9C4),
-                contentColor = Color.Black
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
             ) {
-                IconButton(onClick = onBackClick, modifier = Modifier.weight(1f)) {
+                AnimatedIconButton(onClick = onBackClick, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Settings, contentDescription = "Configuración")
                 }
-                IconButton(onClick = {}, modifier = Modifier.weight(1f)) {
+                AnimatedIconButton(onClick = {}, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Share, contentDescription = "Compartir")
                 }
             }
@@ -54,13 +55,13 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFDCEFFF))
+                .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFFFF9C4))
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 Row(
@@ -68,7 +69,7 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    IconButton(onClick = onPerfilClick) {
+                    AnimatedIconButton(onClick = onPerfilClick) {
                         if (photoUri != null) {
                             AsyncImage(
                                 model = photoUri,
@@ -79,7 +80,7 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
                                 contentScale = ContentScale.Crop
                             )
                         } else {
-                            Icon(Icons.Filled.Person, contentDescription = "Perfil", tint = Color.Black)
+                            Icon(Icons.Filled.Person, contentDescription = "Perfil", tint = MaterialTheme.colorScheme.onSurface)
                         }
                     }
 
@@ -110,7 +111,7 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
             Text(
                 text = "Tablero de trabajo DuocDesk. Software de gestión de tableros y tareas colaborativas para equipos de estudiantes.",
                 fontSize = 14.sp,
-                color = Color.DarkGray,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 
@@ -119,7 +120,7 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .background(Color.White)
+                    .background(MaterialTheme.colorScheme.surfaceContainer)
                     .height(120.dp),
                 contentAlignment = Alignment.Center
             ) {
@@ -127,4 +128,10 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun DetailScreenPreview() {
+    DetailScreen()
 }

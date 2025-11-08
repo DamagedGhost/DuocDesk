@@ -55,8 +55,8 @@ fun TableroScreen(
     Scaffold(
         bottomBar = {
             BottomAppBar(
-                containerColor = Color(0xFFFFF9C4),
-                contentColor = Color.Black
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
             ) {
                 AnimatedIconButton(onClick = onBuscarClick, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Search, contentDescription = "Buscar")
@@ -73,13 +73,13 @@ fun TableroScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFDCEFFF))
+                .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFFFF9C4))
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 Row(
@@ -101,7 +101,7 @@ fun TableroScreen(
                             Icon(
                                 Icons.Default.Person,
                                 contentDescription = "Perfil",
-                                tint = Color.Black
+                                tint = MaterialTheme.colorScheme.onSurface
                             )
                         }
                     }

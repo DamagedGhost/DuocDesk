@@ -46,16 +46,16 @@ fun SearchResultScreen(
     Scaffold(
         bottomBar = {
             BottomAppBar(
-                containerColor = Color(0xFFFFF9C4),
-                contentColor = Color.Black
+                containerColor = MaterialTheme.colorScheme.surface,
+                contentColor = MaterialTheme.colorScheme.onSurface
             ) {
-                IconButton(onClick = { navController.navigate("buscar") }, modifier = Modifier.weight(1f)) {
+                AnimatedIconButton(onClick = { navController.navigate("buscar") }, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Search, contentDescription = "Buscar")
                 }
-                IconButton(onClick = { navController.navigate("favoritos") }, modifier = Modifier.weight(1f)) {
+                AnimatedIconButton(onClick = { navController.navigate("favoritos") }, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Favorite, contentDescription = "Favoritos")
                 }
-                IconButton(onClick = {}, modifier = Modifier.weight(1f)) {
+                AnimatedIconButton(onClick = {}, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.FilterList, contentDescription = "Filtrar")
                 }
             }
@@ -64,13 +64,13 @@ fun SearchResultScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0xFFDCEFFF))
+                .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
         ) {
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color(0xFFFFF9C4))
+                    .background(MaterialTheme.colorScheme.surface)
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 Row(
@@ -89,7 +89,7 @@ fun SearchResultScreen(
                                 contentScale = ContentScale.Crop
                             )
                         } else {
-                            Icon(Icons.Filled.Person, contentDescription = "Perfil", tint = Color.Black)
+                            Icon(Icons.Filled.Person, contentDescription = "Perfil", tint = MaterialTheme.colorScheme.onSurface)
                         }
                     }
 
@@ -123,7 +123,7 @@ fun SearchResultScreen(
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
                     .clickable { navController.navigate("detail") },
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 shape = RoundedCornerShape(12.dp)
             ) {
@@ -140,7 +140,7 @@ fun SearchResultScreen(
                     Text(
                         "Aplicación móvil inspirada en Trello para la gestión de tableros y tareas en equipos de Duoc UC.",
                         fontSize = 14.sp,
-                        color = Color.DarkGray
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
                 }
             }

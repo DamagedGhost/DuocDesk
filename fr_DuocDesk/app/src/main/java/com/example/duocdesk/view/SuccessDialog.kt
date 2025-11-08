@@ -9,6 +9,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun SuccessDialog(
@@ -24,7 +25,7 @@ fun SuccessDialog(
             Icon(
                 Icons.Default.CheckCircle,
                 contentDescription = "Éxito",
-                tint = Color(0xFF008000) // Un color verde
+                tint = MaterialTheme.colorScheme.tertiaryContainer // Color verde para éxito
             )
         },
         confirmButton = {

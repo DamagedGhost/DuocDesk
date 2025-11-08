@@ -92,7 +92,7 @@ fun PerfilScreen(
 
                 Button(
                     onClick = { cameraPermissionLauncher.launch(Manifest.permission.CAMERA) },
-                    colors = ButtonDefaults.buttonColors(Color(0xFFFFC107))
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ) {
                     Icon(Icons.Filled.CameraAlt, contentDescription = "Abrir cámara")
                     Spacer(modifier = Modifier.width(8.dp))

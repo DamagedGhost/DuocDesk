@@ -108,9 +108,9 @@ fun LoginScreen(
                 enabled = !uiState.isLoading // Se deshabilita mientras carga
             ) {
                 if (uiState.isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = Color.White)
+                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary)
                 } else {
-                    Text(text = "Iniciar Sesion", color = Color.White)
+                    Text(text = "Iniciar Sesion", color = MaterialTheme.colorScheme.onPrimary)
                 }
             }
 

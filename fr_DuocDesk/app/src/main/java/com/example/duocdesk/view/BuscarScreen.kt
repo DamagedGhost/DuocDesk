@@ -16,49 +16,51 @@ import androidx.navigation.NavController
 fun BuscarScreen(navController: NavController, onBackClick: () -> Unit = {}) {
     var busqueda by remember { mutableStateOf("") }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color(0xFFDCEFFF))
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Text(
-            text = "Buenos dias [DamagedGhost],",
-            fontSize = 22.sp,
-            fontWeight = FontWeight.Bold
-        )
+ Column(
+     modifier = Modifier
+         .fillMaxSize()
+         .background(MaterialTheme.colorScheme.background)
+         .padding(24.dp),
+     horizontalAlignment = Alignment.CenterHorizontally
+ ) {
+     Spacer(modifier = Modifier.height(60.dp))
 
-        Text(
-            text = "¿Que necesitas?",
-            fontSize = 18.sp,
-            color = Color.DarkGray
-        )
+     Text(
+         text = "Buenos dias [DamagedGhost],",
+         fontSize = 22.sp,
+         fontWeight = FontWeight.Bold
+     )
 
-        Spacer(modifier = Modifier.height(20.dp))
+     Text(
+         text = "¿Que necesitas?",
+         fontSize = 18.sp,
+         color = MaterialTheme.colorScheme.onSurfaceVariant
+     )
 
-        OutlinedTextField(
-            value = busqueda,
-            onValueChange = { busqueda = it },
-            label = { Text("Buscar tablero...") },
-            singleLine = true,
-            modifier = Modifier.fillMaxWidth()
-        )
+     Spacer(modifier = Modifier.height(20.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
+     OutlinedTextField(
+         value = busqueda,
+         onValueChange = { busqueda = it },
+         label = { Text("Buscar tablero...") },
+         singleLine = true,
+         modifier = Modifier.fillMaxWidth()
+     )
 
-        Button(
-            onClick = { navController.navigate("search_result") },
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
-        ) {
-            Text("Buscar tablero", color = Color.White)
-        }
+     Spacer(modifier = Modifier.height(16.dp))
 
-        Spacer(modifier = Modifier.height(32.dp))
+     Button(
+         onClick = { navController.navigate("search_result") },
+         modifier = Modifier.fillMaxWidth(),
+         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+     ) {
+         Text("Buscar tablero", color = Color.White)
+     }
 
-        TextButton(onClick = onBackClick) {
-            Text("Volver al Tablero", color = Color.Gray)
-        }
-    }
+     Spacer(modifier = Modifier.height(32.dp))
+
+     TextButton(onClick = onBackClick) {
+         Text("Volver al Tablero", color = MaterialTheme.colorScheme.tertiary)
+     }
+   }
 }

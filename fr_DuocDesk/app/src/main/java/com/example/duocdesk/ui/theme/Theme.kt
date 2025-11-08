@@ -8,13 +8,25 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-//TODO: Colores primarios y secundarios de la aplicación, POR DEFINIR
-val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF6200EE),
-    secondary = Color(0xFF03DAC6)
+// 1. Paleta de colores
+private val DuocLightColorScheme = lightColorScheme(
+    primary = DuocAppPrimary,
+    onPrimary = Color.White,
+    secondary = DuocAppSecondary,
+    onSecondary = Color.Black,
+    tertiary = DuocAppButtonGray,
+    onTertiary = Color.White,
+    background = DuocAppBackground,
+    onBackground = Color.Black,
+    surface = DuocAppSurface,       // Barras superior/inferior
+    onSurface = Color.Black,
+    surfaceContainer = DuocAppCard, // Fondo de Tarjetas (blanco)
+    onSurfaceVariant = DuocAppTextSecondary, // Texto secundario
+    tertiaryContainer = DuocAppSuccess, // Color éxito
+    onTertiaryContainer = Color.White // Texto sobre color éxito (no usado aquí)
 )
 
-// TODO: Tipografía personalizada, POR DEFINIR
+// Tipografía
 val AppTypography = Typography(
     headlineLarge = TextStyle(
         fontWeight = FontWeight.Bold,
@@ -23,11 +35,11 @@ val AppTypography = Typography(
     bodyLarge = TextStyle(fontSize = 16.sp)
 )
 
-// Tema de la aplicación usando Material 3 con los colores y tipografía definidos
+// Tema de la aplicación usando Material 3
 @Composable
 fun MVVMMaterialAppTheme(content: @Composable () -> Unit) {
     MaterialTheme(
-        colorScheme = LightColorScheme,
+        colorScheme = DuocLightColorScheme,
         typography = AppTypography,
         content = content
     )

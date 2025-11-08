@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cached
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.material3.MaterialTheme
 
 @Composable
 fun CameraPreview(onPhotoCaptured: (Uri) -> Unit) {
@@ -88,7 +89,7 @@ fun CameraPreview(onPhotoCaptured: (Uri) -> Unit) {
                     else
                         CameraSelector.LENS_FACING_BACK
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Gray),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.tertiary),
                 modifier = Modifier.size(60.dp)
             ) {
                 Icon(Icons.Filled.Cached, contentDescription = "Cambiar cámara")
@@ -113,7 +114,7 @@ fun CameraPreview(onPhotoCaptured: (Uri) -> Unit) {
                         }
                     )
                 },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFFFC107)), // Amarillo
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary),
                 modifier = Modifier.size(60.dp)
             ) {
                 Text("", color = Color.Black)
