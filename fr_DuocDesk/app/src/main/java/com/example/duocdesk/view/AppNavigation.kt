@@ -78,8 +78,8 @@ fun AppNavigation() {
             popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }) {
             TableroScreen(
                 onPerfilClick = { navController.navigate("perfil") },
-                onBuscarClick = { navController.navigate("buscar") },
-                onFavoritosClick = { navController.navigate("favoritos") },
+                onBuscarClick = { navController.navigate("buscar") {launchSingleTop = true}},
+                onFavoritosClick = { navController.navigate("favoritos") {launchSingleTop = true}},
                 onFiltrarClick = { /* más adelante se puede agregar filtros */ }
             )
         }

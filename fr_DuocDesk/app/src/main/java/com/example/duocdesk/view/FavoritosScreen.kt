@@ -49,10 +49,10 @@ fun FavoritosScreen(
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.onSurface
             ) {
-                AnimatedIconButton(onClick = { navController.navigate("buscar") }, modifier = Modifier.weight(1f)) {
+                AnimatedIconButton(onClick = { navController.navigate("buscar") {launchSingleTop = true} }, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Search, contentDescription = "Buscar")
                 }
-                AnimatedIconButton(onClick = { navController.navigate("favoritos") }, modifier = Modifier.weight(1f)) {
+                AnimatedIconButton(onClick = { navController.navigate("favoritos") {launchSingleTop = true} }, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Favorite, contentDescription = "Favoritos")
                 }
                 AnimatedIconButton(onClick = {}, modifier = Modifier.weight(1f)) {

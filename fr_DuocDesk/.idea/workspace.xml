@@ -37,20 +37,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="27725bf4-45ff-49af-822f-c3bd8c24b21c" name="Changes" comment="Add splash screen functionality and update app theme">
-      <change beforePath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/8.13/fileHashes/fileHashes.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/ui/theme/Color.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/ui/theme/Color.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/ui/theme/Theme.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/ui/theme/Theme.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/BuscarScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/BuscarScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/CameraPreview.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/CameraPreview.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/DetailScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/DetailScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/FavoritosScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/FavoritosScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/LoginScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/LoginScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/PerfilScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/PerfilScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/RegisterScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/RegisterScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/SearchResultScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/SearchResultScreen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/SuccessDialog.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/SuccessDialog.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/TableroScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/TableroScreen.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -307,12 +294,12 @@
       <map>
         <entry key="com.example.duocdesk">
           <value>
-            <CheckInfo lastCheckTimestamp="1762540925089" />
+            <CheckInfo lastCheckTimestamp="1762638289547" />
           </value>
         </entry>
         <entry key="com.example.duocdesk.test">
           <value>
-            <CheckInfo lastCheckTimestamp="1762540925089" />
+            <CheckInfo lastCheckTimestamp="1762638289548" />
           </value>
         </entry>
       </map>

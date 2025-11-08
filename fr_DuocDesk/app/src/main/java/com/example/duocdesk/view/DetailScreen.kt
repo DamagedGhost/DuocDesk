@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
@@ -44,7 +45,7 @@ fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
                 contentColor = MaterialTheme.colorScheme.onSurface
             ) {
                 AnimatedIconButton(onClick = onBackClick, modifier = Modifier.weight(1f)) {
-                    Icon(Icons.Filled.Settings, contentDescription = "Configuración")
+                    Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "Atrás")
                 }
                 AnimatedIconButton(onClick = {}, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Share, contentDescription = "Compartir")
