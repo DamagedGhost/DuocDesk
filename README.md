@@ -25,7 +25,7 @@ Estas son las "features" principales:
 
 1.  Clona este repositorio:
     ```bash
-    git clone [https://github.com/TU_USUARIO/TU_REPO.git](https://github.com/TU_USUARIO/TU_REPO.git)
+    git clone https://github.com/DamagedGhost/DuocDesk
     ```
 2.  Abre el proyecto con Android Studio.
 3.  Espera que Gradle haga su magia y descargue todo.
