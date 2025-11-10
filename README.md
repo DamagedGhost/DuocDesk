@@ -1,4 +1,4 @@
-# ✨ DuocDesk  desk_chair: ✨
+# ✨ DuocDesk ✨
 
 ¡Hola! 👋 Bienvenido/a a nuestro proyecto **DuocDesk**.
 
