@@ -2,7 +2,7 @@
 
 ¡Hola! 👋 Bienvenido/a a nuestro proyecto **DuocDesk**.
 
-Esta es la app que desarrollamos con harto esfuerzo (y un poquito de estrés 😅) para el ramo de **Desarrollo de Aplicaciones Móviles** (DSY1105). La idea es que sea una app para estudiantes de Duoc, y este es el resultado de nuestras evaluaciones 2 y 3.
+Esta es la app que desarrollamos para el ramo de **Desarrollo de Aplicaciones Móviles**. La idea es que sea una app para estudiantes de Duoc, y este es el resultado de nuestras evaluaciones 2 y 3.
 
 ---
 
