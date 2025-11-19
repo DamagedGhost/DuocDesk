@@ -1,6 +1,5 @@
 package com.example.duocdesk.view
 
-
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -38,7 +37,8 @@ fun TableroScreen(
     onPerfilClick: () -> Unit = {},
     onBuscarClick: () -> Unit = {},
     onFavoritosClick: () -> Unit = {},
-    onFiltrarClick: () -> Unit = {}
+    onFiltrarClick: () -> Unit = {},
+    onGitHubClick: () -> Unit = {}   // 🔥 NUEVO
 ) {
     var tareas by remember {
         mutableStateOf(listOf("Tarea N°1", "Tarea N°2", "Tarea N°3", "Tarea N°4"))
@@ -70,12 +70,15 @@ fun TableroScreen(
             }
         }
     ) { paddingValues ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
         ) {
+
+            // TOP BAR
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -112,6 +115,18 @@ fun TableroScreen(
             }
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            // NUEVO BOTÓN GITHUB 🔥🔥🔥
+            Button(
+                onClick = onGitHubClick,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+            ) {
+                Text("Ver mis repositorios de GitHub")
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "Planificación de sprint",
                 modifier = Modifier.padding(horizontal = 16.dp),
@@ -120,11 +135,13 @@ fun TableroScreen(
             )
 
             Spacer(modifier = Modifier.height(8.dp))
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp)
             ) {
+
                 tareas.forEach { tarea ->
                     OutlinedTextField(
                         value = tarea,
