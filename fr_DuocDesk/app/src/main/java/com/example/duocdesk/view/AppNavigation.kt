@@ -162,7 +162,7 @@ fun AppNavigation() {
             val gitVm: GitHubViewModel = viewModel()
 
             // 👇 SOLO el token, SIN "Bearer" ni "token"
-            val token = "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"   // ej: "ghp_JqJic8TYD..."
+            val token = ""   // ej: "ghp_JqJic8TYD..."
 
             GitHubRepoScreen(
                 token = token,
