@@ -119,7 +119,7 @@ fun AppNavigation() {
         // ------------------------
         composable("github") {
             val gitVm: GitHubViewModel = viewModel()
-            val token = "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"
+            val token = ""
 
             GitHubRepoScreen(
                 token = token,
