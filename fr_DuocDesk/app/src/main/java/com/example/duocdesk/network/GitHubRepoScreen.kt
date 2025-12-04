@@ -86,7 +86,7 @@ fun GitHubRepoScreen(
                                     Spacer(Modifier.height(8.dp))
 
                                     Text("Lenguaje: ${repo.language ?: "Desconocido"}")
-                                    Text("⭐ ${repo.stargazers_count}")
+                                    Text(" ${repo.stargazers_count}")
                                 }
                             }
                         }
