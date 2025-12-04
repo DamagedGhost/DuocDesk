@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
@@ -53,8 +52,7 @@ fun PerfilScreen(
     ) {
         if (showCamera) {
             CameraPreview { uri ->
-                viewModel.updatePhoto(context, uri.toString())
-                showCamera = false
+                viewModel.updatePhoto(context, uri) // Pásale el objeto Uri, no el String
             }
         } else {
             Column(
@@ -113,7 +111,7 @@ fun PerfilScreen(
 
                 Text("Sede: San Bernardo", fontSize = 14.sp)
                 Spacer(modifier = Modifier.height(24.dp))
-                Divider()
+                HorizontalDivider()
                 PerfilItem("Perfil")
                 PerfilItem("Notificaciones")
                 PerfilItem("Foros")
@@ -132,7 +130,7 @@ fun PerfilItem(text: String) {
             .padding(vertical = 10.dp)
     ) {
         Text(text, fontSize = 18.sp)
-        Divider()
+        HorizontalDivider()
     }
 }
 
