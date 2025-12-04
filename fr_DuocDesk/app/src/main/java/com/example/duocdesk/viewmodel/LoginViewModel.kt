@@ -2,6 +2,7 @@ package com.example.duocdesk.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.duocdesk.model.UserSession
 import com.example.duocdesk.network.internal.RetrofitInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -45,9 +46,12 @@ class LoginViewModel(
         viewModelScope.launch {
             try {
                 val body = mapOf("email" to estado.email, "password" to estado.password)
-                val response = api.login(body) // ⭐ ahora sí usa el mock
+                val response = api.login(body)
 
                 if (response.isSuccessful && response.body() != null) {
+                    //GUARDA EL USUARIO EN LA SESIÓN GLOBAL
+                    UserSession.currentUser = response.body()
+
                     _uiState.update {
                         it.copy(
                             loginSuccess = true,
