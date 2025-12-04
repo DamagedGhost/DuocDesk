@@ -36,7 +36,9 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="27725bf4-45ff-49af-822f-c3bd8c24b21c" name="Changes" comment="Add splash screen functionality and update app theme" />
+    <list default="true" id="27725bf4-45ff-49af-822f-c3bd8c24b21c" name="Changes" comment="Add splash screen functionality and update app theme">
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/AppNavigation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/AppNavigation.kt" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
