@@ -1,25 +1,19 @@
 package com.example.duocdesk.view
 
-import com.example.duocdesk.view.GitHubRepoScreen
-import com.example.duocdesk.viewmodel.GitHubViewModel
-
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-
 import androidx.compose.runtime.Composable
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.duocdesk.viewmodel.LoginViewModel
 import com.example.duocdesk.viewmodel.RegisterViewModel
+import com.example.duocdesk.viewmodel.GitHubViewModel
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavigation() {
+
     val navController = rememberNavController()
 
     NavHost(
@@ -27,106 +21,81 @@ fun AppNavigation() {
         startDestination = "login"
     ) {
 
-        // ───────────────────────────────────────────────
+        // ------------------------
         // LOGIN
-        // ───────────────────────────────────────────────
-        composable("login",
-            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
-            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
-            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
-            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }
-        ) {
-            val viewModel: LoginViewModel = viewModel()
+        // ------------------------
+        composable("login") {
+            val vm: LoginViewModel = viewModel()
 
             LoginScreen(
-                viewModel = viewModel,
+                viewModel = vm,
                 onLoginSuccess = {
                     navController.navigate("tablero") {
                         popUpTo("login") { inclusive = true }
                     }
                 },
-                onCreateAccountClick = { navController.navigate("register") }
+                onCreateAccountClick = {
+                    navController.navigate("register")
+                }
             )
         }
 
-        // ───────────────────────────────────────────────
+        // ------------------------
         // REGISTER
-        // ───────────────────────────────────────────────
-        composable("register",
-            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
-            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
-            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
-            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }
-        ) {
-            val viewModel: RegisterViewModel = viewModel()
+        // ------------------------
+        composable("register") {
+            val vm: RegisterViewModel = viewModel()
 
             RegisterScreen(
-                viewModel = viewModel,
+                viewModel = vm,
                 onRegisterSuccess = {
+                    // 1. Volvemos al login
                     navController.navigate("login") {
                         popUpTo("login") { inclusive = true }
                     }
                 },
-                onBackToLoginClick = { navController.popBackStack() }
+                onBackToLoginClick = {
+                    navController.popBackStack()
+                }
             )
         }
 
-        // ───────────────────────────────────────────────
+        // ------------------------
         // TABLERO
-        // ───────────────────────────────────────────────
-        composable("tablero",
-            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
-            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
-            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
-            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }
-        ) {
+        // ------------------------
+        composable("tablero") {
             TableroScreen(
                 onPerfilClick = { navController.navigate("perfil") },
-                onBuscarClick = { navController.navigate("buscar") { launchSingleTop = true } },
-                onFavoritosClick = { navController.navigate("favoritos") { launchSingleTop = true } },
-                onFiltrarClick = { /* futuro */ },
-                onGitHubClick = { navController.navigate("github") }   // 🔥 AÑADIDO
+                onBuscarClick = { navController.navigate("buscar") },
+                onFavoritosClick = { navController.navigate("favoritos") },
+                onGitHubClick = { navController.navigate("github") },
+                onFiltrarClick = {}
             )
         }
 
-        // ───────────────────────────────────────────────
+        // ------------------------
         // PERFIL
-        // ───────────────────────────────────────────────
-        composable("perfil",
-            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
-            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
-            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
-            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }
-        ) {
+        // ------------------------
+        composable("perfil") {
             PerfilScreen(
                 onCloseClick = { navController.popBackStack() }
             )
         }
 
-        // ───────────────────────────────────────────────
+        // ------------------------
         // BUSCAR
-        // ───────────────────────────────────────────────
-        composable("buscar",
-            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
-            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
-            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
-            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }
-        ) {
+        // ------------------------
+        composable("buscar") {
             BuscarScreen(
                 navController = navController,
                 onBackClick = { navController.popBackStack() }
             )
         }
 
-        // ───────────────────────────────────────────────
-        // RESULTADO DE BÚSQUEDA
-        // ───────────────────────────────────────────────
-        composable("search_result",
-            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
-            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
-            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
-            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }
-        ) {
+        // ------------------------
+        // SEARCH RESULT
+        // ------------------------
+        composable("search_result") {
             SearchResultScreen(
                 navController = navController,
                 onPerfilClick = { navController.navigate("perfil") },
@@ -134,15 +103,10 @@ fun AppNavigation() {
             )
         }
 
-        // ───────────────────────────────────────────────
+        // ------------------------
         // FAVORITOS
-        // ───────────────────────────────────────────────
-        composable("favoritos",
-            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
-            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
-            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
-            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }
-        ) {
+        // ------------------------
+        composable("favoritos") {
             FavoritosScreen(
                 navController = navController,
                 onPerfilClick = { navController.navigate("perfil") },
@@ -150,19 +114,12 @@ fun AppNavigation() {
             )
         }
 
-        // ───────────────────────────────────────────────
-        // GITHUB SCREEN (NUEVO)
-        // ───────────────────────────────────────────────
-        composable("github",
-            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
-            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
-            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
-            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }
-        ) {
+        // ------------------------
+        // GITHUB
+        // ------------------------
+        composable("github") {
             val gitVm: GitHubViewModel = viewModel()
-
-            // 👇 SOLO el token, SIN "Bearer" ni "token"
-            val token = ""   // ej: "ghp_JqJic8TYD..."
+            val token = "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"
 
             GitHubRepoScreen(
                 token = token,
@@ -170,15 +127,10 @@ fun AppNavigation() {
             )
         }
 
-        // ───────────────────────────────────────────────
+        // ------------------------
         // DETAIL
-        // ───────────────────────────────────────────────
-        composable("detail",
-            enterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { 1000 }) },
-            exitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { -1000 }) },
-            popEnterTransition = { fadeIn() + slideInHorizontally(initialOffsetX = { -1000 }) },
-            popExitTransition = { fadeOut() + slideOutHorizontally(targetOffsetX = { 1000 }) }
-        ) {
+        // ------------------------
+        composable("detail") {
             DetailScreen(
                 onPerfilClick = { navController.navigate("perfil") },
                 onBackClick = { navController.popBackStack() }

@@ -33,11 +33,14 @@ fun LoginScreen(
     // 2. Si el login fue exitoso, mostramos el diálogo
     if (uiState.loginSuccess) {
         SuccessDialog(
-            onDismiss = onLoginSuccess, // Al cerrar, navegamos
             title = "¡Bienvenido!",
-            message = "Inicio de sesión exitoso. Serás dirigido al tablero."
+            message = "Inicio de sesión exitoso. Serás dirigido al tablero.",
+            onDismiss = onLoginSuccess
         )
+
     }
+
+
 
     Surface(
         modifier = Modifier.fillMaxSize(),

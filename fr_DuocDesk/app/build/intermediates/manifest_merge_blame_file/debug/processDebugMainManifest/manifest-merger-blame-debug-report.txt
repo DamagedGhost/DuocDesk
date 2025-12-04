@@ -10,57 +10,56 @@
 10
 11    <!-- Permisos -->
 12    <uses-permission android:name="android.permission.INTERNET" />
-12-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:6:5-67
-12-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:6:22-64
-13    <uses-permission android:name="android.permission.CAMERA" />
-13-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:7:5-65
-13-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:7:22-62
-14
-15    <permission
-15-->[androidx.core:core:1.17.0] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\70b1e5f0ce5e09843dd59e778dee2dba\transformed\core-1.17.0\AndroidManifest.xml:22:5-24:47
-16        android:name="com.example.duocdesk.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-16-->[androidx.core:core:1.17.0] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\70b1e5f0ce5e09843dd59e778dee2dba\transformed\core-1.17.0\AndroidManifest.xml:23:9-81
-17        android:protectionLevel="signature" />
-17-->[androidx.core:core:1.17.0] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\70b1e5f0ce5e09843dd59e778dee2dba\transformed\core-1.17.0\AndroidManifest.xml:24:9-44
-18
-19    <uses-permission android:name="com.example.duocdesk.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
-19-->[androidx.core:core:1.17.0] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\70b1e5f0ce5e09843dd59e778dee2dba\transformed\core-1.17.0\AndroidManifest.xml:26:5-97
-19-->[androidx.core:core:1.17.0] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\70b1e5f0ce5e09843dd59e778dee2dba\transformed\core-1.17.0\AndroidManifest.xml:26:22-94
-20
+12-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:4:5-67
+12-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:4:22-64
+13
+14    <permission
+14-->[androidx.core:core:1.17.0] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\70b1e5f0ce5e09843dd59e778dee2dba\transformed\core-1.17.0\AndroidManifest.xml:22:5-24:47
+15        android:name="com.example.duocdesk.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+15-->[androidx.core:core:1.17.0] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\70b1e5f0ce5e09843dd59e778dee2dba\transformed\core-1.17.0\AndroidManifest.xml:23:9-81
+16        android:protectionLevel="signature" />
+16-->[androidx.core:core:1.17.0] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\70b1e5f0ce5e09843dd59e778dee2dba\transformed\core-1.17.0\AndroidManifest.xml:24:9-44
+17
+18    <uses-permission android:name="com.example.duocdesk.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" /> <!-- SOLO agrega la cámara si la usas -->
+18-->[androidx.core:core:1.17.0] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\70b1e5f0ce5e09843dd59e778dee2dba\transformed\core-1.17.0\AndroidManifest.xml:26:5-97
+18-->[androidx.core:core:1.17.0] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\70b1e5f0ce5e09843dd59e778dee2dba\transformed\core-1.17.0\AndroidManifest.xml:26:22-94
+19    <!-- <uses-permission android:name="android.permission.CAMERA" /> -->
+20    <!-- <uses-feature android:name="android.hardware.camera" android:required="false" /> -->
 21    <application
-21-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:9:5-26:19
+21-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:10:5-29:19
 22        android:allowBackup="true"
-22-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:12:9-35
+22-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:11:9-35
 23        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
 23-->[androidx.core:core:1.17.0] C:\Users\CAFE DIGITAL\.gradle\caches\8.13\transforms\70b1e5f0ce5e09843dd59e778dee2dba\transformed\core-1.17.0\AndroidManifest.xml:28:18-86
 24        android:debuggable="true"
 25        android:extractNativeLibs="false"
 26        android:icon="@mipmap/ic_launcher"
-26-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:13:9-43
-27        android:label="DuocDesk"
-27-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:14:9-33
+26-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:15:9-43
+27        android:label="@string/app_name"
+27-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:12:9-41
 28        android:networkSecurityConfig="@xml/network_security_config"
-28-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:11:9-69
-29        android:testOnly="true"
-30        android:theme="@style/Theme.Material3"
-30-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:15:9-47
+28-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:14:9-69
+29        android:roundIcon="@mipmap/ic_launcher_round"
+29-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:16:9-54
+30        android:supportsRtl="true"
+30-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:17:9-35
 31        android:usesCleartextTraffic="true" >
-31-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:10:9-44
+31-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:13:9-44
 32        <activity
-32-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:17:9-24:20
+32-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:20:5-27:20
 33            android:name="com.example.duocdesk.MainActivity"
-33-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:18:13-41
+33-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:21:13-41
 34            android:exported="true" >
-34-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:19:13-36
+34-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:22:13-36
 35            <intent-filter>
-35-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:20:13-23:29
+35-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:23:13-26:29
 36                <action android:name="android.intent.action.MAIN" />
-36-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:21:17-69
-36-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:21:25-66
+36-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:24:17-69
+36-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:24:25-66
 37
 38                <category android:name="android.intent.category.LAUNCHER" />
-38-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:22:17-77
-38-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:22:27-74
+38-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:25:17-77
+38-->C:\Users\CAFE DIGITAL\AndroidStudioProjects\DuocDesk\fr_DuocDesk\app\src\main\AndroidManifest.xml:25:27-74
 39            </intent-filter>
 40        </activity>
 41        <activity

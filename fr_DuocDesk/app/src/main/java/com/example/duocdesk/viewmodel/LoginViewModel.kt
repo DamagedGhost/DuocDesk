@@ -1,75 +1,78 @@
 package com.example.duocdesk.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.duocdesk.data.AppDatabase
+import com.example.duocdesk.network.internal.RetrofitInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import com.example.duocdesk.network.internal.ApiService
 
-// 1. Usamos AndroidViewModel otra vez
-class LoginViewModel(app: Application) : AndroidViewModel(app) {
 
-    private val usuarioDao = AppDatabase.getDatabase(app).usuarioDao()
+class LoginViewModel(
+    private val api: ApiService = RetrofitInstance.api
+) : ViewModel() {
+
+
 
     private val _uiState = MutableStateFlow(LoginUiState())
     val uiState = _uiState.asStateFlow()
 
-    // --- EVENTOS ---
     fun onEmailChange(valor: String) {
-        _uiState.update { it.copy(
-            email = valor,
-            errores = it.errores.copy(email = null, general = null)
-        )}
+        _uiState.update { it.copy(email = valor, errores = it.errores.copy(email = null)) }
     }
 
     fun onPasswordChange(valor: String) {
-        _uiState.update { it.copy(
-            password = valor,
-            errores = it.errores.copy(password = null, general = null)
-        )}
+        _uiState.update { it.copy(password = valor, errores = it.errores.copy(password = null)) }
     }
 
-    // --- LÓGICA PRINCIPAL ---
     fun onLoginClick() {
-        if (validarFormulario()) {
-            _uiState.update { it.copy(isLoading = true) }
+        val estado = _uiState.value
 
-            viewModelScope.launch {
-                // 2. BUSCAMOS EN ROOM (Req #5)
-                val usuario = usuarioDao.validarLogin(
-                    correo = _uiState.value.email,
-                    contrasena = _uiState.value.password
-                )
+        if (estado.email.isBlank() || !estado.email.contains("@")) {
+            _uiState.update { it.copy(errores = it.errores.copy(email = "Correo inválido")) }
+            return
+        }
 
-                if (usuario != null) {
-                    // 3. ¡ÉXITO! Usuario encontrado (Req #1)
-                    _uiState.update { it.copy(isLoading = false, loginSuccess = true) }
+        if (estado.password.isBlank()) {
+            _uiState.update { it.copy(errores = it.errores.copy(password = "Debe ingresar contraseña")) }
+            return
+        }
+
+        _uiState.update { it.copy(isLoading = true) }
+
+        viewModelScope.launch {
+            try {
+                val body = mapOf("email" to estado.email, "password" to estado.password)
+                val response = api.login(body) // ⭐ ahora sí usa el mock
+
+                if (response.isSuccessful && response.body() != null) {
+                    _uiState.update {
+                        it.copy(
+                            loginSuccess = true,
+                            usuario = response.body(),
+                            isLoading = false
+                        )
+                    }
                 } else {
-                    // 4. ERROR. Usuario no encontrado
-                    _uiState.update { it.copy(
+                    _uiState.update {
+                        it.copy(
+                            isLoading = false,
+                            errores = it.errores.copy(general = "Credenciales incorrectas")
+                        )
+                    }
+                }
+
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
                         isLoading = false,
-                        errores = it.errores.copy(general = "Correo o contraseña incorrectos")
-                    )}
+                        errores = it.errores.copy(general = "Error de red")
+                    )
                 }
             }
         }
     }
-
-    // --- LÓGICA DE VALIDACIÓN (Privada) ---
-    private fun validarFormulario(): Boolean {
-        val estadoActual = _uiState.value
-        val nuevosErrores = LoginErrores(
-            email = if (estadoActual.email.isBlank()) "Email no puede estar vacío" else null,
-            password = if (estadoActual.password.isBlank()) "Contraseña no puede estar vacía" else null
-        )
-
-        _uiState.update { it.copy(errores = nuevosErrores) }
-
-        return nuevosErrores.email == null &&
-                nuevosErrores.password == null &&
-                nuevosErrores.general == null
-    }
 }
+

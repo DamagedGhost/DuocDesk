@@ -1,8 +1,9 @@
-package com.example.duocdesk.network
+package com.example.duocdesk.network.external
 
+import com.example.duocdesk.network.GitRepo
+import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.Call
 
 interface GitHubApiService {
 

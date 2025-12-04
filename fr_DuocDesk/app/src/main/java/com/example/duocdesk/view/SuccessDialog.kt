@@ -1,47 +1,51 @@
 package com.example.duocdesk.view
 
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Icon
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 
 @Composable
 fun SuccessDialog(
-    onDismiss: () -> Unit,
-    title: String,
-    message: String
+    title: String = "Éxito",
+    message: String,
+    onDismiss: () -> Unit
 ) {
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(text = title) },
-        text = { Text(text = message) },
-        icon = {
-            Icon(
-                Icons.Default.CheckCircle,
-                contentDescription = "Éxito",
-                tint = MaterialTheme.colorScheme.tertiaryContainer // Color verde para éxito
-            )
-        },
-        confirmButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Aceptar")
+    Dialog(onDismissRequest = onDismiss) {
+
+        Surface(
+            shape = MaterialTheme.shapes.medium,
+            tonalElevation = 6.dp
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(24.dp)
+                    .fillMaxWidth()
+            ) {
+
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.titleLarge
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Text(
+                    text = message,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Button(
+                    onClick = onDismiss,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text("Aceptar")
+                }
             }
         }
-    )
-}
-
-@Preview
-@Composable
-fun SuccessDialogPreview() {
-    SuccessDialog(
-        onDismiss = {},
-        title = "Operación Exitosa",
-        message = "La operación se ha completado con éxito."
-    )
+    }
 }

@@ -8,33 +8,31 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.duocdesk.R
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.duocdesk.R
+import com.example.duocdesk.model.Usuario
 import com.example.duocdesk.viewmodel.RegisterViewModel
 
 @Composable
 fun RegisterScreen(
-    onRegisterSuccess: () -> Unit = {}, // <-- Lambda para navegar
-    onBackToLoginClick: () -> Unit = {},
-    viewModel: RegisterViewModel = viewModel() // <-- Obtenemos el VM
+    viewModel: RegisterViewModel = viewModel(),
+    onRegisterSuccess: () -> Unit = {},
+    onBackToLoginClick: () -> Unit = {}
 ) {
-    // 1. Recogemos el estado (UiState) del ViewModel
     val uiState by viewModel.uiState.collectAsState()
 
-    // 2. Si el registro fue exitoso, mostramos el diálogo
+    // 🔵 Si el registro fue exitoso, mostramos diálogo y luego llamamos al callback
     if (uiState.registrationSuccess) {
         SuccessDialog(
-            onDismiss = onRegisterSuccess, // Al cerrar, navegamos
-            title = "¡Registro Exitoso!",
-            message = "Tu cuenta ha sido creada. Ahora serás dirigido al Login."
+            title = "¡Registro exitoso!",
+            message = "Tu cuenta se ha creado correctamente.",
+            onDismiss = onRegisterSuccess
         )
     }
 
@@ -43,47 +41,50 @@ fun RegisterScreen(
         color = MaterialTheme.colorScheme.background
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().padding(horizontal = 24.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            // ... (Logo y Título se quedan igual) ...
+
             Image(
                 painter = painterResource(id = R.drawable.duoc_desk),
-                contentDescription = "Logo DuocDesk",
+                contentDescription = "Logo",
                 modifier = Modifier.size(120.dp)
             )
-            Spacer(modifier = Modifier.height(16.dp))
+
+            Spacer(Modifier.height(16.dp))
+
             Text(
                 text = "Crear Cuenta",
                 fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center
+                fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(20.dp))
 
-            // 3. CAMPO NOMBRE
+            Spacer(Modifier.height(20.dp))
+
+            // ---- NOMBRE ----
             OutlinedTextField(
-                value = uiState.nombre, // <-- Conectado al VM
-                onValueChange = viewModel::onNombreChange, // <-- Evento al VM
+                value = uiState.nombre,
+                onValueChange = viewModel::onNombreChange,
                 label = { Text("Nombre") },
-                singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
-                isError = uiState.errores.nombre != null, // <-- Conectado al VM
-                supportingText = { // <-- Muestra el error
+                isError = uiState.errores.nombre != null,
+                supportingText = {
                     AnimatedVisibility(uiState.errores.nombre != null) {
                         Text(uiState.errores.nombre ?: "")
                     }
                 }
             )
-            Spacer(modifier = Modifier.height(10.dp))
 
-            // 4. CAMPO APELLIDO
+            Spacer(Modifier.height(8.dp))
+
+            // ---- APELLIDO ----
             OutlinedTextField(
                 value = uiState.apellido,
                 onValueChange = viewModel::onApellidoChange,
                 label = { Text("Apellido") },
-                singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
                 isError = uiState.errores.apellido != null,
                 supportingText = {
@@ -92,16 +93,16 @@ fun RegisterScreen(
                     }
                 }
             )
-            Spacer(modifier = Modifier.height(10.dp))
 
-            // 5. CAMPO CORREO
+            Spacer(Modifier.height(8.dp))
+
+            // ---- EMAIL ----
             OutlinedTextField(
                 value = uiState.email,
                 onValueChange = viewModel::onEmailChange,
                 label = { Text("Email") },
-                singleLine = true,
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                 isError = uiState.errores.email != null,
                 supportingText = {
                     AnimatedVisibility(uiState.errores.email != null) {
@@ -109,16 +110,17 @@ fun RegisterScreen(
                     }
                 }
             )
-            Spacer(modifier = Modifier.height(10.dp))
 
-            // 6. CAMPO CONTRASEÑA
+            Spacer(Modifier.height(8.dp))
+
+            // ---- PASSWORD ----
             OutlinedTextField(
                 value = uiState.password,
                 onValueChange = viewModel::onPasswordChange,
                 label = { Text("Contraseña") },
+                modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth(),
                 isError = uiState.errores.password != null,
                 supportingText = {
                     AnimatedVisibility(uiState.errores.password != null) {
@@ -126,24 +128,54 @@ fun RegisterScreen(
                     }
                 }
             )
-            Spacer(modifier = Modifier.height(20.dp))
 
-            // 7. BOTÓN DE REGISTRO
+            Spacer(Modifier.height(20.dp))
+
+            // ---- BOTÓN REGISTRARSE ----
             Button(
-                onClick = viewModel::onRegisterClick, // <-- Evento al VM
+                onClick = {
+                    viewModel.registrar(
+                        Usuario(
+                            nombre = uiState.nombre,
+                            apellido = uiState.apellido,
+                            email = uiState.email,
+                            password = uiState.password,
+                            carrera = "Ing informática",
+                            edad = 18,
+                            rolGlobal = "USER"
+                        )
+                    )
+                },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = !uiState.isLoading // Se deshabilita mientras carga
+                enabled = !uiState.isLoading
             ) {
                 if (uiState.isLoading) {
-                    CircularProgressIndicator(modifier = Modifier.size(24.dp), color = MaterialTheme.colorScheme.onPrimary)
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(22.dp),
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        strokeWidth = 2.dp
+                    )
                 } else {
-                    Text(text = "Registrarse", color = MaterialTheme.colorScheme.onPrimary)
+                    Text("Registrarse")
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-            TextButton(onClick = onBackToLoginClick, enabled = !uiState.isLoading) {
+            Spacer(Modifier.height(12.dp))
+
+            TextButton(
+                onClick = onBackToLoginClick,
+                enabled = !uiState.isLoading
+            ) {
                 Text("¿Ya tienes una cuenta? Inicia sesión")
+            }
+
+            // Error general (por ejemplo, correo ya registrado / error de red)
+            AnimatedVisibility(uiState.errores.general != null) {
+                Spacer(Modifier.height(8.dp))
+                Text(
+                    text = uiState.errores.general ?: "",
+                    color = MaterialTheme.colorScheme.error
+                )
             }
         }
     }

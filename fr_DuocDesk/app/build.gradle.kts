@@ -116,5 +116,15 @@ dependencies {
 
     implementation("com.google.android.material:material:1.12.0")
 
+    // --- UNIT TESTING ---
+    testImplementation("io.mockk:mockk:1.13.9")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
+    testImplementation("junit:junit:4.13.2")
+
+// --- UI TESTING ---
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+    androidTestImplementation("io.mockk:mockk-android:1.13.9")
+
 
 }
