@@ -116,7 +116,7 @@ fun TableroScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // NUEVO BOTÓN GITHUB 🔥🔥🔥
+            //BOTÓN GITHUB
             Button(
                 onClick = onGitHubClick,
                 modifier = Modifier
