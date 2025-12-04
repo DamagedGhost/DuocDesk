@@ -11,10 +11,26 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import java.util.Calendar
+import com.example.duocdesk.model.UserSession
 
 @Composable
 fun BuscarScreen(navController: NavController, onBackClick: () -> Unit = {}) {
     var busqueda by remember { mutableStateOf("") }
+
+    //obtiene usuario actual
+    val usuario = UserSession.currentUser
+    val nombre = usuario?.nombre ?: "Usuario"
+
+    //saludo segun hora del dia
+    val saludo = remember {
+        val hora = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+        when (hora) {
+            in 6..11 -> "Buenos días"
+            in 12..19 -> "Buenas tardes"
+            else -> "Buenas noches"
+        }
+    }
 
  Column(
      modifier = Modifier
@@ -26,7 +42,7 @@ fun BuscarScreen(navController: NavController, onBackClick: () -> Unit = {}) {
      Spacer(modifier = Modifier.height(60.dp))
 
      Text(
-         text = "Buenos dias [DamagedGhost],",
+         text = "$saludo $nombre,", // Ej: "Buenas tardes Marcelo,"
          fontSize = 22.sp,
          fontWeight = FontWeight.Bold
      )

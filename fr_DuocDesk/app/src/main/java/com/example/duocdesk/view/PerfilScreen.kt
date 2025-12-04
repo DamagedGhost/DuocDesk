@@ -23,7 +23,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.duocdesk.viewmodel.PerfilViewModel
-
+import com.example.duocdesk.model.UserSession
+import androidx.compose.ui.text.font.FontWeight
 @Composable
 fun PerfilScreen(
     viewModel: PerfilViewModel = viewModel(),
@@ -42,6 +43,9 @@ fun PerfilScreen(
         rememberLauncherForActivityResult(RequestPermission()) { granted ->
             if (granted) showCamera = true
         }
+
+    val usuario = UserSession.currentUser
+    val nombreCompleto = if (usuario != null) "${usuario.nombre} ${usuario.apellido}" else "Usuario Invitado"
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -100,7 +104,13 @@ fun PerfilScreen(
                 }
 
                 Spacer(modifier = Modifier.height(20.dp))
-                Text("[Name]", fontSize = 20.sp)
+
+                Text(
+                    text = nombreCompleto,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold // Le queda bien un poco de negrita
+                )
+
                 Text("Sede: San Bernardo", fontSize = 14.sp)
                 Spacer(modifier = Modifier.height(24.dp))
                 Divider()
