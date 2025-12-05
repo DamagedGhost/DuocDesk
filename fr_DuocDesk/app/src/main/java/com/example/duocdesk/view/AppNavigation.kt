@@ -76,10 +76,6 @@ fun AppNavigation() {
         // ------------------------
         // PERFIL
         // ------------------------
-        composable("editarPerfil") {
-            EditarPerfilScreen(onBack = { navController.popBackStack() })
-        }
-
         composable("perfil") {
             PerfilScreen(
                 navToEditarPerfil = { navController.navigate("editarPerfil") }
@@ -144,6 +140,5 @@ fun AppNavigation() {
                 onBackClick = { navController.popBackStack() }
             )
         }
-
     }
 }
