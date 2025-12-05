@@ -1,6 +1,7 @@
 package com.example.duocdesk.view
 
 import android.Manifest
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -14,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -23,7 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.duocdesk.viewmodel.PerfilViewModel
 import com.example.duocdesk.model.UserSession
-import androidx.compose.ui.text.font.FontWeight
+
 @Composable
 fun PerfilScreen(
     viewModel: PerfilViewModel = viewModel(),
@@ -38,23 +40,41 @@ fun PerfilScreen(
         viewModel.loadSavedPhoto(context)
     }
 
+    // -------------------------
+    // LAUNCHER PERMISO DE CÁMARA
+    // -------------------------
     val cameraPermissionLauncher =
         rememberLauncherForActivityResult(RequestPermission()) { granted ->
-            if (granted) showCamera = true
+            if (granted) {
+                showCamera = true
+            } else {
+                Toast.makeText(context, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show()
+            }
         }
 
     val usuario = UserSession.currentUser
-    val nombreCompleto = if (usuario != null) "${usuario.nombre} ${usuario.apellido}" else "Usuario Invitado"
+    val nombreCompleto =
+        if (usuario != null) "${usuario.nombre} ${usuario.apellido}" else "Usuario Invitado"
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
+
+        // -------------------------
+        // MODO CÁMARA
+        // -------------------------
         if (showCamera) {
             CameraPreview { uri ->
-                viewModel.updatePhoto(context, uri) // Pásale el objeto Uri, no el String
+                viewModel.updatePhoto(context, uri)
+                showCamera = false   // CERRAR CÁMARA DESPUÉS DE CAPTURAR
             }
+
         } else {
+
+            // -------------------------
+            // MODO PERFIL
+            // -------------------------
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -62,6 +82,7 @@ fun PerfilScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Top
             ) {
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
@@ -92,8 +113,13 @@ fun PerfilScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // -------------------------
+                // BOTÓN PARA ABRIR CÁMARA
+                // -------------------------
                 Button(
-                    onClick = { cameraPermissionLauncher.launch(Manifest.permission.CAMERA) },
+                    onClick = {
+                        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                    },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
                 ) {
                     Icon(Icons.Filled.CameraAlt, contentDescription = "Abrir cámara")
@@ -106,11 +132,12 @@ fun PerfilScreen(
                 Text(
                     text = nombreCompleto,
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold // Le queda bien un poco de negrita
+                    fontWeight = FontWeight.Bold
                 )
 
                 Text("Sede: San Bernardo", fontSize = 14.sp)
                 Spacer(modifier = Modifier.height(24.dp))
+
                 HorizontalDivider()
                 PerfilItem("Perfil")
                 PerfilItem("Notificaciones")
