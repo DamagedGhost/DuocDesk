@@ -4,12 +4,14 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import androidx.exifinterface.media.ExifInterface // Necesario para rotación
+import android.media.ExifInterface
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.duocdesk.model.UserSession
+import com.example.duocdesk.model.Usuario
 import com.example.duocdesk.network.internal.RetrofitInstance
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -19,7 +21,6 @@ import okhttp3.RequestBody.Companion.asRequestBody
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
-import androidx.core.graphics.scale
 
 class PerfilViewModel : ViewModel() {
 
@@ -44,93 +45,85 @@ class PerfilViewModel : ViewModel() {
     }
 
     private suspend fun uploadImageToServer(context: Context, uri: Uri) {
-        val currentUser = UserSession.currentUser
-        if (currentUser?._id == null) return
-
+        val currentUser = UserSession.currentUser ?: return
         var file: File? = null
 
         try {
-            // 1. PROCESAR (Rotar y Comprimir)
             file = uriToFile(context, uri) ?: return
 
             val requestFile = file.asRequestBody("image/jpeg".toMediaTypeOrNull())
             val body = MultipartBody.Part.createFormData("foto", file.name, requestFile)
 
-            // 2. SUBIR (Backend con Librería)
-            val response = RetrofitInstance.api.subirFoto(currentUser._id, body)
+            val response = RetrofitInstance.api.subirFoto(currentUser._id!!, body)
 
             if (response.isSuccessful && response.body() != null) {
-                // 3. ACTUALIZAR SESIÓN
-                val nuevoUsuario = response.body()!!.usuario
-                UserSession.currentUser = nuevoUsuario
-                println("--> Éxito: Foto subida y comprimida.")
+
+                val resp = response.body()!!
+                val usuarioJson = resp["usuario"]
+
+                if (usuarioJson != null) {
+                    val usuarioActualizado = Gson().fromJson(usuarioJson, Usuario::class.java)
+                    UserSession.currentUser = usuarioActualizado
+                }
             }
+
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
-            // 4. LIMPIEZA
-            try { file?.delete() } catch (e: Exception) {}
+            if (file != null && file.exists()) file.delete()
         }
     }
 
-    // --- UTILS DE COMPRESIÓN ---
     private fun uriToFile(context: Context, uri: Uri): File? {
-        val contentResolver = context.contentResolver
         val tempFile = File.createTempFile("temp_perfil", ".jpg", context.cacheDir)
 
         try {
-            contentResolver.openInputStream(uri)?.use { inputStream ->
-                val originalBitmap = BitmapFactory.decodeStream(inputStream) ?: return null
+            context.contentResolver.openInputStream(uri)?.use { input ->
+                val bmp = BitmapFactory.decodeStream(input) ?: return null
 
-                // Rotar
-                val rotation = getRotationFromUri(context, uri)
-                val rotatedBitmap = rotateBitmap(originalBitmap, rotation)
+                val rotated = rotateBitmap(bmp, getRotationFromUri(context, uri))
+                val scaled = getResizedBitmap(rotated, 800)
 
-                // Compactar a 600px
-                val scaledBitmap = getResizedBitmap(rotatedBitmap, 600)
-
-                // Calidad 50%
-                FileOutputStream(tempFile).use { outputStream ->
-                    scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
+                FileOutputStream(tempFile).use {
+                    scaled.compress(Bitmap.CompressFormat.JPEG, 50, it)
                 }
             }
             return tempFile
-        } catch (e: Exception) { return null }
+        } catch (e: Exception) {
+            return null
+        }
     }
 
     private fun getRotationFromUri(context: Context, uri: Uri): Int {
-        var inputStream: InputStream? = null
-        try {
-            inputStream = context.contentResolver.openInputStream(uri)
-            if (inputStream == null) return 0
-            val exif = ExifInterface(inputStream)
-            return when (exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
-                ExifInterface.ORIENTATION_ROTATE_90 -> 90
-                ExifInterface.ORIENTATION_ROTATE_180 -> 180
-                ExifInterface.ORIENTATION_ROTATE_270 -> 270
-                else -> 0
-            }
-        } catch (e: Exception) { return 0 } finally { inputStream?.close() }
+        val inputStream = context.contentResolver.openInputStream(uri) ?: return 0
+        val exif = ExifInterface(inputStream)
+        return when (exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)) {
+            ExifInterface.ORIENTATION_ROTATE_90 -> 90
+            ExifInterface.ORIENTATION_ROTATE_180 -> 180
+            ExifInterface.ORIENTATION_ROTATE_270 -> 270
+            else -> 0
+        }
     }
 
     private fun rotateBitmap(bitmap: Bitmap, degrees: Int): Bitmap {
         if (degrees == 0) return bitmap
-        val matrix = Matrix()
-        matrix.postRotate(degrees.toFloat())
+        val matrix = Matrix().apply { postRotate(degrees.toFloat()) }
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
     }
 
     private fun getResizedBitmap(image: Bitmap, maxSize: Int): Bitmap {
-        var width = image.width
-        var height = image.height
-        val bitmapRatio = width.toFloat() / height.toFloat()
-        if (bitmapRatio > 1) {
+        val ratio = image.width.toFloat() / image.height
+        val width: Int
+        val height: Int
+
+        if (ratio > 1) {
             width = maxSize
-            height = (width / bitmapRatio).toInt()
+            height = (maxSize / ratio).toInt()
         } else {
             height = maxSize
-            width = (height * bitmapRatio).toInt()
+            width = (maxSize * ratio).toInt()
         }
-        return image.scale(width, height)
+
+        return Bitmap.createScaledBitmap(image, width, height, true)
     }
 }

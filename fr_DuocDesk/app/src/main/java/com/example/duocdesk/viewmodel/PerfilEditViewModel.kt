@@ -2,23 +2,24 @@ package com.example.duocdesk.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.duocdesk.model.Usuario
 import com.example.duocdesk.model.UserSession
-import com.example.duocdesk.network.internal.ApiService
+import com.example.duocdesk.model.Usuario
+import com.example.duocdesk.network.internal.RetrofitInstance
+import com.google.gson.Gson
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
-class PerfilEditViewModel(
-    private val api: ApiService = ApiService.crear()
-) : ViewModel() {
+class PerfilEditViewModel : ViewModel() {
 
-    private val _usuario = MutableStateFlow(UserSession.currentUser)
-    val usuario: StateFlow<Usuario?> = _usuario
+    private val _usuario = MutableStateFlow<Usuario?>(UserSession.currentUser)
+    val usuario = _usuario.asStateFlow()
 
     private val _mensaje = MutableStateFlow<String?>(null)
-    val mensaje: StateFlow<String?> = _mensaje
+    val mensaje = _mensaje.asStateFlow()
+
+    // Mantener cambios antes de guardar
+    private var usuarioEditado: Usuario = UserSession.currentUser ?: Usuario()
 
     fun actualizarCampo(
         nombre: String? = null,
@@ -26,61 +27,75 @@ class PerfilEditViewModel(
         carrera: String? = null,
         edad: Int? = null
     ) {
-        val actual = _usuario.value ?: return
-
-        _usuario.value = actual.copy(
-            nombre = nombre ?: actual.nombre,
-            apellido = apellido ?: actual.apellido,
-            carrera = carrera ?: actual.carrera,
-            edad = edad ?: actual.edad
+        usuarioEditado = usuarioEditado.copy(
+            nombre = nombre ?: usuarioEditado.nombre,
+            apellido = apellido ?: usuarioEditado.apellido,
+            carrera = carrera ?: usuarioEditado.carrera,
+            edad = edad ?: usuarioEditado.edad
         )
     }
 
     fun guardarCambios() {
-        val user = _usuario.value ?: return
+        val id = usuarioEditado._id ?: run {
+            _mensaje.value = "Error: ID de usuario nulo"
+            return
+        }
 
         viewModelScope.launch {
             try {
-                val respuesta: Response<Usuario> =
-                    api.actualizarPerfil(user._id!!, user)
+                val response = RetrofitInstance.api.actualizarPerfil(id, usuarioEditado)
 
-                if (respuesta.isSuccessful) {
-                    val actualizado = respuesta.body()
-                    UserSession.currentUser = actualizado
-                    _usuario.value = actualizado
-                    _mensaje.value = "Perfil actualizado correctamente"
+                if (response.isSuccessful && response.body() != null) {
+                    // Backend devuelve: { "usuario": "{json-del-usuario}" }
+                    val respMap = response.body()!!        // Map<String, String>
+                    val usuarioJson = respMap["usuario"]
+
+                    if (usuarioJson != null) {
+                        val usuarioActualizado =
+                            Gson().fromJson(usuarioJson, Usuario::class.java)
+
+                        UserSession.currentUser = usuarioActualizado
+                        _usuario.value = usuarioActualizado
+                        _mensaje.value = "Cambios guardados correctamente"
+                    } else {
+                        _mensaje.value = "Error: backend no envió 'usuario'"
+                    }
+
                 } else {
-                    _mensaje.value = "Error: ${respuesta.code()}"
+                    val errorTexto = response.errorBody()?.string()
+                    _mensaje.value =
+                        "Error guardando cambios (${response.code()}): ${errorTexto ?: "desconocido"}"
                 }
-
             } catch (e: Exception) {
-                _mensaje.value = "Error de conexión"
+                _mensaje.value = "Excepción guardando cambios: ${e.message}"
             }
         }
     }
 
     fun eliminarCuenta(onSuccess: () -> Unit) {
-        val user = _usuario.value ?: return
+        val id = usuarioEditado._id ?: run {
+            _mensaje.value = "Error: ID de usuario nulo"
+            return
+        }
 
         viewModelScope.launch {
             try {
-                val respuesta = api.eliminarUsuario(user._id!!)
+                val response = RetrofitInstance.api.eliminarUsuario(id)
 
-                if (respuesta.isSuccessful) {
-                    // Limpiamos la sesión
+                if (response.isSuccessful) {
+                    // No necesitamos el cuerpo, con que sea 2xx está ok
                     UserSession.currentUser = null
-                    _mensaje.value = "Cuenta eliminada"
-
-                    // Callback para navegar al login
+                    _mensaje.value = "Cuenta eliminada correctamente"
                     onSuccess()
                 } else {
-                    _mensaje.value = "Error eliminando cuenta"
+                    val errorTexto = response.errorBody()?.string()
+                    _mensaje.value =
+                        "Error eliminando cuenta (${response.code()}): ${errorTexto ?: "desconocido"}"
                 }
 
             } catch (e: Exception) {
-                _mensaje.value = "Error de conexión"
+                _mensaje.value = "Excepción eliminando cuenta: ${e.message}"
             }
         }
     }
-
 }
