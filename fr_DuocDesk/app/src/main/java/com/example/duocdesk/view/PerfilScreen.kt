@@ -2,6 +2,7 @@ package com.example.duocdesk.view
 
 import android.Manifest
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -28,6 +29,7 @@ import com.example.duocdesk.model.UserSession
 
 @Composable
 fun PerfilScreen(
+    navToEditarPerfil: () -> Unit,
     viewModel: PerfilViewModel = viewModel(),
     onCloseClick: () -> Unit = {}
 ) {
@@ -40,9 +42,6 @@ fun PerfilScreen(
         viewModel.loadSavedPhoto(context)
     }
 
-    // -------------------------
-    // LAUNCHER PERMISO DE CÁMARA
-    // -------------------------
     val cameraPermissionLauncher =
         rememberLauncherForActivityResult(RequestPermission()) { granted ->
             if (granted) {
@@ -61,20 +60,14 @@ fun PerfilScreen(
         color = MaterialTheme.colorScheme.background
     ) {
 
-        // -------------------------
-        // MODO CÁMARA
-        // -------------------------
         if (showCamera) {
             CameraPreview { uri ->
                 viewModel.updatePhoto(context, uri)
-                showCamera = false   // CERRAR CÁMARA DESPUÉS DE CAPTURAR
+                showCamera = false
             }
 
         } else {
 
-            // -------------------------
-            // MODO PERFIL
-            // -------------------------
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -113,9 +106,6 @@ fun PerfilScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // -------------------------
-                // BOTÓN PARA ABRIR CÁMARA
-                // -------------------------
                 Button(
                     onClick = {
                         cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
@@ -139,7 +129,10 @@ fun PerfilScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 HorizontalDivider()
-                PerfilItem("Perfil")
+
+                PerfilItem("Editar Perfil") {
+                    navToEditarPerfil()
+                }
                 PerfilItem("Notificaciones")
                 PerfilItem("Foros")
                 PerfilItem("Favoritos")
@@ -150,10 +143,11 @@ fun PerfilScreen(
 }
 
 @Composable
-fun PerfilItem(text: String) {
+fun PerfilItem(text: String, onClick: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClick() }
             .padding(vertical = 10.dp)
     ) {
         Text(text, fontSize = 18.sp)
@@ -164,5 +158,5 @@ fun PerfilItem(text: String) {
 @Preview
 @Composable
 fun PerfilScreenPreview() {
-    PerfilScreen()
+    PerfilScreen(navToEditarPerfil = {})
 }
