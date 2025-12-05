@@ -42,6 +42,12 @@ interface ApiService {
         @Path("id") id: String
     ): Response<Usuario>
 
+    @DELETE("api/usuarios/{id}")
+    suspend fun eliminarUsuario(
+        @Path("id") id: String
+    ): Response<Map<String, String>>
+
+
 
     // -----------------------------
     // CONSTRUCTOR RETROFIT AQUÍ MISMO

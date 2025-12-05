@@ -58,4 +58,29 @@ class PerfilEditViewModel(
             }
         }
     }
+
+    fun eliminarCuenta(onSuccess: () -> Unit) {
+        val user = _usuario.value ?: return
+
+        viewModelScope.launch {
+            try {
+                val respuesta = api.eliminarUsuario(user._id!!)
+
+                if (respuesta.isSuccessful) {
+                    // Limpiamos la sesión
+                    UserSession.currentUser = null
+                    _mensaje.value = "Cuenta eliminada"
+
+                    // Callback para navegar al login
+                    onSuccess()
+                } else {
+                    _mensaje.value = "Error eliminando cuenta"
+                }
+
+            } catch (e: Exception) {
+                _mensaje.value = "Error de conexión"
+            }
+        }
+    }
+
 }
