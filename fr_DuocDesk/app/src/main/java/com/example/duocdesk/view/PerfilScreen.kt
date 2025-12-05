@@ -25,6 +25,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.duocdesk.viewmodel.PerfilViewModel
 import com.example.duocdesk.model.UserSession
+import com.example.duocdesk.model.getFotoUrl
 
 @Composable
 fun PerfilScreen(
@@ -55,6 +56,23 @@ fun PerfilScreen(
     val usuario = UserSession.currentUser
     val nombreCompleto =
         if (usuario != null) "${usuario.nombre} ${usuario.apellido}" else "Usuario Invitado"
+    val imagenAMostrar: Any? = remember(photoUri, usuario) {
+        when {
+            // -------------------------
+            // MOSTRAR FOTO DE PERFIL
+            // -------------------------
+
+            // prioridad 1 - foto almacenada local
+            !photoUri.isNullOrEmpty() -> photoUri
+
+            // prioridad 2 - foto almacenada remota (mongo)
+            usuario?.fotoPerfilId != null -> usuario.getFotoUrl()
+
+            // fallback
+            else -> null
+
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -92,9 +110,9 @@ fun PerfilScreen(
                     }
                 }
 
-                if (photoUri != null) {
+                if (imagenAMostrar != null) {
                     AsyncImage(
-                        model = photoUri,
+                        model = imagenAMostrar,
                         contentDescription = "Foto de perfil",
                         modifier = Modifier
                             .size(120.dp)
@@ -104,7 +122,7 @@ fun PerfilScreen(
                 } else {
                     Icon(
                         Icons.Filled.Person,
-                        contentDescription = "Perfil",
+                        contentDescription = "Foto de perfil",
                         modifier = Modifier
                             .size(100.dp)
                             .clip(CircleShape)

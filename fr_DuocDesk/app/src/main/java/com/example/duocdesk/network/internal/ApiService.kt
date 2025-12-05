@@ -22,5 +22,5 @@ interface ApiService {
     suspend fun subirFoto(
         @Path("id") userId: String,
         @Part imagen: MultipartBody.Part
-    ): Response<Map<String, String>> // Devuelve un JSON simple { "fotoId": "..." }
+    ): Response<UploadResponse> // <--- Usa la nueva clase data class
 }
