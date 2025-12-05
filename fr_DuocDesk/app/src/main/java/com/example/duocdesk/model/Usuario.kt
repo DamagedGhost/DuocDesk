@@ -8,7 +8,11 @@ data class Usuario(
     val password: String = "",
     val carrera: String = "",
     val edad: Int = 0,
-    val rolGlobal: String = "USER"
+    val rolGlobal: String = "USER",
+    val fotoPerfilId: String? = null
 )
 
-
+fun Usuario.getFotoUrl(): String? {
+    if (this._id == null || this.fotoPerfilId == null) return null
+    return "http://98.91.150.2:4000/api/usuarios/${this._id}/foto?id=${this.fotoPerfilId}"
+}

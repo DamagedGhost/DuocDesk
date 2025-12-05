@@ -9,10 +9,6 @@ import retrofit2.http.*
 
 interface ApiService {
 
-    // -----------------------------
-    // ENDPOINTS
-    // -----------------------------
-
     @GET("api/usuarios")
     suspend fun getUsuarios(): Response<List<Usuario>>
 
@@ -22,20 +18,18 @@ interface ApiService {
     @POST("api/usuarios/login")
     suspend fun login(@Body body: Map<String, String>): Response<Usuario>
 
-    // --- SUBIR FOTO ---
     @Multipart
     @POST("api/usuarios/{id}/foto")
     suspend fun subirFoto(
-        @Path("id") userId: String,
+        @Path("id") id: String,
         @Part imagen: MultipartBody.Part
     ): Response<Map<String, String>>
 
-    // --- PERFIL: GET + UPDATE ---
     @PUT("api/usuarios/{id}")
     suspend fun actualizarPerfil(
         @Path("id") id: String,
         @Body usuario: Usuario
-    ): Response<Usuario>
+    ): Response<Map<String, String>>   // 🔥 EL BACKEND DEVUELVE MAP
 
     @GET("api/usuarios/{id}")
     suspend fun obtenerPerfil(
@@ -47,11 +41,6 @@ interface ApiService {
         @Path("id") id: String
     ): Response<Map<String, String>>
 
-
-
-    // -----------------------------
-    // CONSTRUCTOR RETROFIT AQUÍ MISMO
-    // -----------------------------
     companion object {
         private const val BASE_URL = "http://98.91.150.2:4000/"
 

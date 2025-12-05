@@ -11,8 +11,7 @@ import com.example.duocdesk.viewmodel.PerfilEditViewModel
 @Composable
 fun EditarPerfilScreen(
     vm: PerfilEditViewModel = viewModel(),
-    onBack: () -> Unit,
-    onDeleteSuccess: () -> Unit //nuevo callback para ir al login
+    onBack: () -> Unit
 ) {
     val usuario by vm.usuario.collectAsState()
     val mensaje by vm.mensaje.collectAsState()
@@ -22,17 +21,16 @@ fun EditarPerfilScreen(
     var carrera by remember { mutableStateOf(usuario?.carrera ?: "") }
     var edad by remember { mutableStateOf(usuario?.edad?.toString() ?: "") }
 
-    // Estado para mostrar el diálogo de confirmación
-    var showConfirmDelete by remember { mutableStateOf(false) }
+    var showDialog by remember { mutableStateOf(false) }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
+
         Column(Modifier.padding(24.dp)) {
 
             Text("Editar Perfil", style = MaterialTheme.typography.headlineMedium)
-
             Spacer(Modifier.height(16.dp))
 
             OutlinedTextField(
@@ -80,9 +78,7 @@ fun EditarPerfilScreen(
             Button(
                 onClick = { vm.guardarCambios() },
                 modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Guardar Cambios")
-            }
+            ) { Text("Guardar Cambios") }
 
             mensaje?.let {
                 Spacer(Modifier.height(10.dp))
@@ -94,49 +90,41 @@ fun EditarPerfilScreen(
             Button(
                 onClick = onBack,
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                )
-            ) {
-                Text("Volver")
-            }
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer)
+            ) { Text("Volver") }
 
-            // BOTÓN ROJO PARA ELIMINAR
+            Spacer(Modifier.height(12.dp))
+
             Button(
-                onClick = { showConfirmDelete = true }, // ⚠ muestra diálogo
+                onClick = { showDialog = true },
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.error
-                )
-            ) {
-                Text("Eliminar Cuenta", color = MaterialTheme.colorScheme.onError)
-            }
-        }
-    }
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
+            ) { Text("Eliminar Cuenta", color = MaterialTheme.colorScheme.onError) }
 
-    // DIÁLOGO DE CONFIRMACIÓN
-    if (showConfirmDelete) {
-        AlertDialog(
-            onDismissRequest = { showConfirmDelete = false },
-            title = { Text("¿Eliminar cuenta?") },
-            text = { Text("Esta acción no se puede deshacer. ¿Deseas continuar?") },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showConfirmDelete = false
-                        vm.eliminarCuenta {
-                            onDeleteSuccess()  // navegamos al login
+            if (showDialog) {
+                AlertDialog(
+                    onDismissRequest = { showDialog = false },
+                    title = { Text("Confirmar eliminación") },
+                    text = { Text("¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.") },
+                    confirmButton = {
+                        TextButton(
+                            onClick = {
+                                showDialog = false
+                                vm.eliminarCuenta {
+                                    onBack()
+                                }
+                            }
+                        ) {
+                            Text("Eliminar", color = MaterialTheme.colorScheme.error)
+                        }
+                    },
+                    dismissButton = {
+                        TextButton(onClick = { showDialog = false }) {
+                            Text("Cancelar")
                         }
                     }
-                ) {
-                    Text("Sí, eliminar", color = MaterialTheme.colorScheme.error)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { showConfirmDelete = false }) {
-                    Text("Cancelar")
-                }
+                )
             }
-        )
+        }
     }
 }

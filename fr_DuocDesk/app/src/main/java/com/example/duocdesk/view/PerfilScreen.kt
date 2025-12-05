@@ -1,8 +1,8 @@
 package com.example.duocdesk.view
 
 import android.Manifest
-import android.widget.Toast
 import androidx.compose.foundation.clickable
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -26,12 +26,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.duocdesk.viewmodel.PerfilViewModel
 import com.example.duocdesk.model.UserSession
+import com.example.duocdesk.model.getFotoUrl
 
 @Composable
 fun PerfilScreen(
-    navToEditarPerfil: () -> Unit,
     viewModel: PerfilViewModel = viewModel(),
-    onCloseClick: () -> Unit = {}
+    onCloseClick: () -> Unit = {},
+    onEditarPerfilClick: () -> Unit
 ) {
     val context = LocalContext.current
     val photoUri by viewModel.photoUri.collectAsState()
@@ -44,16 +45,21 @@ fun PerfilScreen(
 
     val cameraPermissionLauncher =
         rememberLauncherForActivityResult(RequestPermission()) { granted ->
-            if (granted) {
-                showCamera = true
-            } else {
-                Toast.makeText(context, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show()
-            }
+            if (granted) showCamera = true
+            else Toast.makeText(context, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show()
         }
 
     val usuario = UserSession.currentUser
     val nombreCompleto =
         if (usuario != null) "${usuario.nombre} ${usuario.apellido}" else "Usuario Invitado"
+
+    val imagenAMostrar: Any? = remember(photoUri, usuario) {
+        when {
+            !photoUri.isNullOrEmpty() -> photoUri
+            usuario?.fotoPerfilId != null -> usuario.getFotoUrl()
+            else -> null
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -72,8 +78,7 @@ fun PerfilScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Top
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
 
                 Row(
@@ -85,9 +90,9 @@ fun PerfilScreen(
                     }
                 }
 
-                if (photoUri != null) {
+                if (imagenAMostrar != null) {
                     AsyncImage(
-                        model = photoUri,
+                        model = imagenAMostrar,
                         contentDescription = "Foto de perfil",
                         modifier = Modifier
                             .size(120.dp)
@@ -97,7 +102,7 @@ fun PerfilScreen(
                 } else {
                     Icon(
                         Icons.Filled.Person,
-                        contentDescription = "Perfil",
+                        contentDescription = "Foto de perfil",
                         modifier = Modifier
                             .size(100.dp)
                             .clip(CircleShape)
@@ -107,32 +112,23 @@ fun PerfilScreen(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 Button(
-                    onClick = {
-                        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+                    onClick = { cameraPermissionLauncher.launch(Manifest.permission.CAMERA) },
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
                 ) {
-                    Icon(Icons.Filled.CameraAlt, contentDescription = "Abrir cámara")
-                    Spacer(modifier = Modifier.width(8.dp))
+                    Icon(Icons.Filled.CameraAlt, contentDescription = null)
+                    Spacer(Modifier.width(8.dp))
                     Text("Actualizar foto")
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(Modifier.height(20.dp))
 
-                Text(
-                    text = nombreCompleto,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
+                Text(nombreCompleto, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 Text("Sede: San Bernardo", fontSize = 14.sp)
-                Spacer(modifier = Modifier.height(24.dp))
 
+                Spacer(Modifier.height(24.dp))
                 HorizontalDivider()
 
-                PerfilItem("Editar Perfil") {
-                    navToEditarPerfil()
-                }
+                PerfilItem("Editar Perfil") { onEditarPerfilClick() }
                 PerfilItem("Notificaciones")
                 PerfilItem("Foros")
                 PerfilItem("Favoritos")
@@ -143,12 +139,12 @@ fun PerfilScreen(
 }
 
 @Composable
-fun PerfilItem(text: String, onClick: () -> Unit = {}) {
+fun PerfilItem(text: String, onClick: (() -> Unit)? = null) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
             .padding(vertical = 10.dp)
+            .let { if (onClick != null) it.clickable { onClick() } else it }
     ) {
         Text(text, fontSize = 18.sp)
         HorizontalDivider()
@@ -158,5 +154,5 @@ fun PerfilItem(text: String, onClick: () -> Unit = {}) {
 @Preview
 @Composable
 fun PerfilScreenPreview() {
-    PerfilScreen(navToEditarPerfil = {})
+    PerfilScreen(onEditarPerfilClick = {})
 }

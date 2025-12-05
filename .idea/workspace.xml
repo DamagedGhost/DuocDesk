@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d4e10aaf-43bf-4e4c-b1a2-95f1b20534ce" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="d4e10aaf-43bf-4e4c-b1a2-95f1b20534ce" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,8 +47,8 @@
 }</component>
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
-    "url": "https://github.com/DamagedGhost/DuocDesk",
-    "accountId": "4397d41d-267b-4d69-82dc-1e9ac4b13997"
+    "url": "https://github.com/DamagedGhost/DuocDesk.git",
+    "accountId": "a26a7522-211c-4270-a446-9008da5f92f9"
   }
 }]]></component>
   <component name="ProjectColorInfo">{
@@ -73,7 +70,7 @@
     "cidr.known.project.marker": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/felip/Proyectos/GitHub/DuocDesk"
+    "last_opened_file_path": "C:/Users/CAFE DIGITAL/AndroidStudioProjects/Foto/DuocDesk"
   }
 }]]></component>
   <component name="RunManager">

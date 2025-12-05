@@ -78,22 +78,23 @@ fun AppNavigation() {
         // ------------------------
         composable("perfil") {
             PerfilScreen(
-                navToEditarPerfil = { navController.navigate("editarPerfil") }
+                onCloseClick = { navController.popBackStack() },
+                onEditarPerfilClick = { navController.navigate("editar_perfil") }  // ← CORREGIDO
             )
         }
 
-        composable("editarPerfil") {
+        // ------------------------
+        // EDITAR PERFIL
+        // ------------------------
+        composable("editar_perfil") {
             EditarPerfilScreen(
-                onBack = { navController.popBackStack() },
-                onDeleteSuccess = {
-                    navController.navigate("login") {
-                        popUpTo(0) { inclusive = true } // 🔥 elimina todo el stack
+                onBack = {
+                    navController.navigate("login") {   // ← vuelve al login si se elimina
+                        popUpTo("tablero") { inclusive = true }
                     }
                 }
             )
         }
-
-
 
         // ------------------------
         // BUSCAR
@@ -149,6 +150,4 @@ fun AppNavigation() {
             )
         }
     }
-
-
 }

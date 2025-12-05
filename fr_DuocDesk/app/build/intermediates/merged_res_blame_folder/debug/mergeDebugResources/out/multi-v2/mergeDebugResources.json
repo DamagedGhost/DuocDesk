@@ -2676,7 +2676,7 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\CAFE DIGITAL\\AndroidStudioProjects\\DuocDesk\\fr_DuocDesk\\app\\src\\main\\res\\values\\themes.xml",
+                    "source": "C:\\Users\\CAFE DIGITAL\\AndroidStudioProjects\\Foto\\DuocDesk\\fr_DuocDesk\\app\\src\\main\\res\\values\\themes.xml",
                     "from": {
                         "startLines": "3",
                         "startColumns": "4",
@@ -2728,6 +2728,23 @@
                         "startOffsets": "133727",
                         "endColumns": "82",
                         "endOffsets": "133805"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\CAFE DIGITAL\\AndroidStudioProjects\\Foto\\DuocDesk\\fr_DuocDesk\\app\\src\\main\\res\\values\\ic_launcher_background.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "57",
+                        "endColumns": "56",
+                        "endOffsets": "109"
+                    },
+                    "to": {
+                        "startLines": "721",
+                        "startColumns": "4",
+                        "startOffsets": "38001",
+                        "endColumns": "56",
+                        "endOffsets": "38053"
                     }
                 },
                 {
@@ -2841,20 +2858,20 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\CAFE DIGITAL\\AndroidStudioProjects\\DuocDesk\\fr_DuocDesk\\app\\src\\main\\res\\values\\ic_launcher_background.xml",
+                    "source": "C:\\Users\\CAFE DIGITAL\\AndroidStudioProjects\\Foto\\DuocDesk\\fr_DuocDesk\\app\\src\\main\\res\\values\\colors.xml",
                     "from": {
-                        "startLines": "2",
-                        "startColumns": "4",
-                        "startOffsets": "57",
-                        "endColumns": "56",
-                        "endOffsets": "109"
+                        "startLines": "7,2,3,4,5,6,8",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "293,57,105,153,201,247,336",
+                        "endColumns": "41,46,46,46,44,44,41",
+                        "endOffsets": "330,99,147,195,241,287,373"
                     },
                     "to": {
-                        "startLines": "721",
-                        "startColumns": "4",
-                        "startOffsets": "38001",
-                        "endColumns": "56",
-                        "endOffsets": "38053"
+                        "startLines": "661,969,970,971,982,983,986",
+                        "startColumns": "4,4,4,4,4,4,4",
+                        "startOffsets": "33834,56749,56796,56843,57587,57632,57798",
+                        "endColumns": "41,46,46,46,44,44,41",
+                        "endOffsets": "33871,56791,56838,56885,57627,57672,57835"
                     }
                 },
                 {
@@ -2894,23 +2911,6 @@
                     }
                 },
                 {
-                    "source": "C:\\Users\\CAFE DIGITAL\\AndroidStudioProjects\\DuocDesk\\fr_DuocDesk\\app\\src\\main\\res\\values\\colors.xml",
-                    "from": {
-                        "startLines": "7,2,3,4,5,6,8",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "293,57,105,153,201,247,336",
-                        "endColumns": "41,46,46,46,44,44,41",
-                        "endOffsets": "330,99,147,195,241,287,373"
-                    },
-                    "to": {
-                        "startLines": "661,969,970,971,982,983,986",
-                        "startColumns": "4,4,4,4,4,4,4",
-                        "startOffsets": "33834,56749,56796,56843,57587,57632,57798",
-                        "endColumns": "41,46,46,46,44,44,41",
-                        "endOffsets": "33871,56791,56838,56885,57627,57672,57835"
-                    }
-                },
-                {
                     "source": "C:\\Users\\CAFE DIGITAL\\.gradle\\caches\\8.13\\transforms\\3c64ce52e9a4f2d759c487663cd09b35\\transformed\\coil-base-2.2.2\\res\\values\\values.xml",
                     "from": {
                         "startLines": "2",
@@ -2942,23 +2942,6 @@
                         "startOffsets": "126560",
                         "endColumns": "42",
                         "endOffsets": "126598"
-                    }
-                },
-                {
-                    "source": "C:\\Users\\CAFE DIGITAL\\AndroidStudioProjects\\DuocDesk\\fr_DuocDesk\\app\\src\\main\\res\\values\\strings.xml",
-                    "from": {
-                        "startLines": "1,2,3",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "17,64,131",
-                        "endColumns": "45,65,59",
-                        "endOffsets": "58,125,186"
-                    },
-                    "to": {
-                        "startLines": "2029,2051,2245",
-                        "startColumns": "4,4,4",
-                        "startOffsets": "133810,136148,158320",
-                        "endColumns": "45,65,59",
-                        "endOffsets": "133851,136209,158375"
                     }
                 },
                 {
@@ -3088,6 +3071,23 @@
                         "startOffsets": "126517",
                         "endColumns": "42",
                         "endOffsets": "126555"
+                    }
+                },
+                {
+                    "source": "C:\\Users\\CAFE DIGITAL\\AndroidStudioProjects\\Foto\\DuocDesk\\fr_DuocDesk\\app\\src\\main\\res\\values\\strings.xml",
+                    "from": {
+                        "startLines": "1,2,3",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "17,64,131",
+                        "endColumns": "45,65,59",
+                        "endOffsets": "58,125,186"
+                    },
+                    "to": {
+                        "startLines": "2029,2051,2245",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "133810,136148,158320",
+                        "endColumns": "45,65,59",
+                        "endOffsets": "133851,136209,158375"
                     }
                 }
             ]
