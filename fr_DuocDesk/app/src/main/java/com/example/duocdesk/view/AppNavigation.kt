@@ -78,22 +78,9 @@ fun AppNavigation() {
         // ------------------------
         composable("perfil") {
             PerfilScreen(
-                navToEditarPerfil = { navController.navigate("editarPerfil") }
+                onCloseClick = { navController.popBackStack() }
             )
         }
-
-        composable("editarPerfil") {
-            EditarPerfilScreen(
-                onBack = { navController.popBackStack() },
-                onDeleteSuccess = {
-                    navController.navigate("login") {
-                        popUpTo(0) { inclusive = true } // 🔥 elimina todo el stack
-                    }
-                }
-            )
-        }
-
-
 
         // ------------------------
         // BUSCAR
@@ -149,6 +136,4 @@ fun AppNavigation() {
             )
         }
     }
-
-
 }

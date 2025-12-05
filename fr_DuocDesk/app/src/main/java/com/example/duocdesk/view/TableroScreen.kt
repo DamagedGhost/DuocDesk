@@ -1,12 +1,7 @@
 package com.example.duocdesk.view
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.graphicsLayer
-import com.example.duocdesk.view.AnimatedIconButton
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -21,7 +16,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -30,7 +24,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.duocdesk.model.getFotoUrl
 import com.example.duocdesk.viewmodel.PerfilViewModel
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.compose.runtime.DisposableEffect
+// Agrega estos imports al inicio del archivo
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 
 @Composable
 fun TableroScreen(
@@ -38,15 +41,35 @@ fun TableroScreen(
     onBuscarClick: () -> Unit = {},
     onFavoritosClick: () -> Unit = {},
     onFiltrarClick: () -> Unit = {},
-    onGitHubClick: () -> Unit = {}   // 🔥 NUEVO
+    onGitHubClick: () -> Unit = {}
 ) {
-    var tareas by remember {
-        mutableStateOf(listOf("Tarea N°1", "Tarea N°2", "Tarea N°3", "Tarea N°4"))
-    }
+    var currentUser by remember { mutableStateOf(com.example.duocdesk.model.UserSession.currentUser) }
 
     val context = LocalContext.current
     val viewModel: PerfilViewModel = viewModel()
     val photoUri by viewModel.photoUri.collectAsState()
+
+    var tareas by remember {
+        mutableStateOf(listOf("Tarea N°1", "Tarea N°2", "Tarea N°3", "Tarea N°4"))
+    }
+
+    val lifecycleOwner = androidx.lifecycle.compose.LocalLifecycleOwner.current
+
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                currentUser = com.example.duocdesk.model.UserSession.currentUser
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        currentUser = com.example.duocdesk.model.UserSession.currentUser
+    }
 
     LaunchedEffect(Unit) {
         viewModel.loadSavedPhoto(context)
@@ -91,6 +114,7 @@ fun TableroScreen(
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     AnimatedIconButton(onClick = onPerfilClick) {
+                        val fotoUrl = currentUser?.getFotoUrl()
                         if (photoUri != null) {
                             AsyncImage(
                                 model = photoUri,

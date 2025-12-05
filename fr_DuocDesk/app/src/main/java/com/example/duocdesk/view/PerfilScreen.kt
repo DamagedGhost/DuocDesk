@@ -2,7 +2,6 @@ package com.example.duocdesk.view
 
 import android.Manifest
 import android.widget.Toast
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
@@ -26,10 +25,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.duocdesk.viewmodel.PerfilViewModel
 import com.example.duocdesk.model.UserSession
+import com.example.duocdesk.model.getFotoUrl
 
 @Composable
 fun PerfilScreen(
-    navToEditarPerfil: () -> Unit,
     viewModel: PerfilViewModel = viewModel(),
     onCloseClick: () -> Unit = {}
 ) {
@@ -42,6 +41,9 @@ fun PerfilScreen(
         viewModel.loadSavedPhoto(context)
     }
 
+    // -------------------------
+    // LAUNCHER PERMISO DE CÁMARA
+    // -------------------------
     val cameraPermissionLauncher =
         rememberLauncherForActivityResult(RequestPermission()) { granted ->
             if (granted) {
@@ -54,20 +56,43 @@ fun PerfilScreen(
     val usuario = UserSession.currentUser
     val nombreCompleto =
         if (usuario != null) "${usuario.nombre} ${usuario.apellido}" else "Usuario Invitado"
+    val imagenAMostrar: Any? = remember(photoUri, usuario) {
+        when {
+            // -------------------------
+            // MOSTRAR FOTO DE PERFIL
+            // -------------------------
+
+            // prioridad 1 - foto almacenada local
+            !photoUri.isNullOrEmpty() -> photoUri
+
+            // prioridad 2 - foto almacenada remota (mongo)
+            usuario?.fotoPerfilId != null -> usuario.getFotoUrl()
+
+            // fallback
+            else -> null
+
+        }
+    }
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
 
+        // -------------------------
+        // MODO CÁMARA
+        // -------------------------
         if (showCamera) {
             CameraPreview { uri ->
                 viewModel.updatePhoto(context, uri)
-                showCamera = false
+                showCamera = false   // CERRAR CÁMARA DESPUÉS DE CAPTURAR
             }
 
         } else {
 
+            // -------------------------
+            // MODO PERFIL
+            // -------------------------
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -85,9 +110,9 @@ fun PerfilScreen(
                     }
                 }
 
-                if (photoUri != null) {
+                if (imagenAMostrar != null) {
                     AsyncImage(
-                        model = photoUri,
+                        model = imagenAMostrar,
                         contentDescription = "Foto de perfil",
                         modifier = Modifier
                             .size(120.dp)
@@ -97,7 +122,7 @@ fun PerfilScreen(
                 } else {
                     Icon(
                         Icons.Filled.Person,
-                        contentDescription = "Perfil",
+                        contentDescription = "Foto de perfil",
                         modifier = Modifier
                             .size(100.dp)
                             .clip(CircleShape)
@@ -106,6 +131,9 @@ fun PerfilScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
+                // -------------------------
+                // BOTÓN PARA ABRIR CÁMARA
+                // -------------------------
                 Button(
                     onClick = {
                         cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
@@ -129,10 +157,7 @@ fun PerfilScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 HorizontalDivider()
-
-                PerfilItem("Editar Perfil") {
-                    navToEditarPerfil()
-                }
+                PerfilItem("Perfil")
                 PerfilItem("Notificaciones")
                 PerfilItem("Foros")
                 PerfilItem("Favoritos")
@@ -143,11 +168,10 @@ fun PerfilScreen(
 }
 
 @Composable
-fun PerfilItem(text: String, onClick: () -> Unit = {}) {
+fun PerfilItem(text: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable { onClick() }
             .padding(vertical = 10.dp)
     ) {
         Text(text, fontSize = 18.sp)
@@ -158,5 +182,5 @@ fun PerfilItem(text: String, onClick: () -> Unit = {}) {
 @Preview
 @Composable
 fun PerfilScreenPreview() {
-    PerfilScreen(navToEditarPerfil = {})
+    PerfilScreen()
 }
