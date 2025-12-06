@@ -101,8 +101,8 @@ Nota importante: No requiere configuraciones adicionales. Retrofit ya apunta al 
 
 Este proyecto fue creado en equipo por:
 
-* **DamagedGhost**
-* **diegoparra-git**
-* **Ekkondido**
+* **DamagedGhost (Felipe Vasquez)**
+* **diegoparra-git (Diego Parra)**
+* **Ekkondido (Marcelo Mancilla)**
 
 ¡Gracias por revisar nuestro proyecto! ❤️
