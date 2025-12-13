@@ -26,6 +26,8 @@ import coil.compose.AsyncImage
 import com.example.duocdesk.model.Tablero
 import com.example.duocdesk.viewmodel.PerfilViewModel
 import com.example.duocdesk.viewmodel.TableroViewModel
+import androidx.compose.material.icons.filled.Add
+import android.widget.Toast
 
 @Composable
 fun TableroScreen(
@@ -34,16 +36,29 @@ fun TableroScreen(
     onFavoritosClick: () -> Unit = {},
     onFiltrarClick: () -> Unit = {},
     onGitHubClick: () -> Unit = {},
+    onTableroClick: (Tablero) -> Unit = {},
             // ViewModels inyectados
     tableroViewModel: TableroViewModel = viewModel(),
     perfilViewModel: PerfilViewModel = viewModel()
+
 ) {
     val context = LocalContext.current
     val photoUri by perfilViewModel.photoUri.collectAsState()
 
+    var showCreateDialog by remember { mutableStateOf(false) }
+    var newTableroName by remember { mutableStateOf("") }
+    val mensaje by tableroViewModel.mensaje.collectAsState()
     // Obtenemos los tableros del backend
     val tableros by tableroViewModel.tableros.collectAsState()
     val isLoading by tableroViewModel.isLoading.collectAsState()
+
+    LaunchedEffect(mensaje) {
+        mensaje?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            tableroViewModel.limpiarMensaje()
+        }
+    }
+
 
     LaunchedEffect(Unit) {
         perfilViewModel.loadSavedPhoto(context)
@@ -53,12 +68,28 @@ fun TableroScreen(
     Scaffold(
         // --- BOTÓN FLOTANTE PARA RESERVAR SALA ---
         floatingActionButton = {
-            ExtendedFloatingActionButton(
-                onClick = { tableroViewModel.abrirReservaSala(context) },
-                icon = { Icon(Icons.Filled.DateRange, "Reservar") },
-                text = { Text("Reservar Sala") },
-                containerColor = MaterialTheme.colorScheme.secondary
-            )
+            Column(
+                horizontalAlignment = Alignment.End,
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // 1. Botón Crear Tablero
+                FloatingActionButton(
+                    onClick = { showCreateDialog = true },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    shape = CircleShape
+                ) {
+                    Icon(Icons.Filled.Add, "Crear Tablero")
+                }
+
+                // 2. Botón Reservar Sala (AHORA ESTÁ DENTRO DE LA COLUMNA)
+                ExtendedFloatingActionButton(
+                    onClick = { tableroViewModel.abrirReservaSala(context) },
+                    icon = { Icon(Icons.Filled.DateRange, "Reservar") },
+                    text = { Text("Reservar Sala") },
+                    containerColor = MaterialTheme.colorScheme.secondary
+                )
+            }
         },
         bottomBar = {
             BottomAppBar(
@@ -134,7 +165,10 @@ fun TableroScreen(
             }
 
             Spacer(modifier = Modifier.height(24.dp))
-            Text("Mis Tableros", style = MaterialTheme.typography.titleLarge)
+            Text("Mis Tableros",
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
 
             if (isLoading) {
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -146,15 +180,19 @@ fun TableroScreen(
             } else {
                 LazyColumn(
                     verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier.padding(top = 8.dp)
+                    modifier = Modifier
+                        .padding(top = 8.dp)
+                        .padding(horizontal = 16.dp)
                 ) {
                     items(tableros) { tablero ->
                         TableroItem(
                             tablero = tablero,
+                            onClick = {onTableroClick(tablero)},
                             onFavClick = {
-                                // SUGERENCIA DE SEGURIDAD: Evita el !! si es posible
+
                                 tablero._id?.let { id -> tableroViewModel.toggleFavorito(id) }
                             }
+
                         )
                     }
                     //TODO: Botón para crear tablero ficticio (para probar)
@@ -165,19 +203,59 @@ fun TableroScreen(
                                 .padding(vertical = 8.dp) // Un poco de estilo extra
                         ) {
                             Text("+ Nuevo Tablero")
-                        } // <--- ¡ESTA LLAVE FALTABA!
+                        }
                     }
                 }
             }
         }
+
+        if (showCreateDialog) {
+            AlertDialog(
+                onDismissRequest = { showCreateDialog = false },
+                title = { Text("Nuevo Tablero") },
+                text = {
+                    Column {
+                        Text("Ponle un nombre a tu espacio de trabajo:")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        OutlinedTextField(
+                            value = newTableroName,
+                            onValueChange = { newTableroName = it },
+                            label = { Text("Nombre del tablero") },
+                            singleLine = true,
+                            modifier = Modifier.fillMaxWidth()
+                        )
+                    }
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            if (newTableroName.isNotBlank()) {
+                                tableroViewModel.crearTablero(newTableroName)
+                                newTableroName = "" // Limpiar campo
+                                showCreateDialog = false // Cerrar diálogo
+                            }
+                        }
+                    ) {
+                        Text("Crear")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showCreateDialog = false }) {
+                        Text("Cancelar")
+                    }
+                }
+            )
+        }
     }
 }
 
+
 @Composable
-fun TableroItem(tablero: Tablero, onFavClick: () -> Unit) {
+fun TableroItem(tablero: Tablero, onFavClick: () -> Unit, onClick: () -> Unit) {
     Card(
         elevation = CardDefaults.cardElevation(4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
+        modifier = Modifier.clickable {onClick()}
     ) {
         Row(
             modifier = Modifier

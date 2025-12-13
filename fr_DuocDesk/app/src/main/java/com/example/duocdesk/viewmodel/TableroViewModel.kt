@@ -11,6 +11,7 @@ import com.example.duocdesk.network.internal.RetrofitInstance
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import com.example.duocdesk.model.TableroRequest
 
 class TableroViewModel : ViewModel() {
 
@@ -27,6 +28,9 @@ class TableroViewModel : ViewModel() {
     init {
         cargarTableros()
     }
+
+    private val _mensaje = MutableStateFlow<String?>(null)
+    val mensaje = _mensaje.asStateFlow()
 
     fun cargarTableros() {
         viewModelScope.launch {
@@ -71,5 +75,47 @@ class TableroViewModel : ViewModel() {
             if (it._id == tableroId) it.copy(esFavorito = !it.esFavorito) else it
         }
         _tableros.value = listaActualizada
+    }
+
+    fun crearTablero(nombre: String) {
+        val currentUser = UserSession.currentUser
+
+        if (currentUser?._id == null) {
+            _mensaje.value = "Error: No hay sesión activa"
+            return
+        }
+
+        if (nombre.isBlank()) {
+            _mensaje.value = "El nombre no puede estar vacío"
+            return
+        }
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                // Creamos el objeto Tablero.
+                // IMPORTANTE: Asignamos el ID del usuario como 'owner'
+                val nuevoTableroRequest = TableroRequest(
+                    nombre_tablero = nombre,
+                    owner = currentUser._id
+                )
+                val response = RetrofitInstance.api.crearTablero(nuevoTableroRequest)
+
+                if (response.isSuccessful) {
+                    _mensaje.value = "Tablero creado exitosamente"
+                    cargarTableros() // Recargamos la lista para que aparezca el nuevo
+                } else {
+                    _mensaje.value = "Error al crear: ${response.code()}"
+                }
+
+            } catch (e: Exception) {
+                _mensaje.value = "Error de conexión: ${e.message}"
+                e.printStackTrace()
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+    fun limpiarMensaje() {
+        _mensaje.value = null
     }
 }

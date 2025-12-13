@@ -10,6 +10,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.duocdesk.viewmodel.LoginViewModel
 import com.example.duocdesk.viewmodel.RegisterViewModel
 import com.example.duocdesk.viewmodel.GitHubViewModel
+import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.animation.core.tween
+
 
 
 @Composable
@@ -19,7 +22,36 @@ fun AppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = "login"
+        startDestination = "login",
+
+        // 1. ANIMACIÓN DE ENTRADA (Al navegar hacia un destino nuevo)
+        enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Start, // Entra desde la derecha
+                animationSpec = tween(500) // Duración 500ms
+            )
+        },
+        // 2. ANIMACIÓN DE SALIDA (La pantalla que se va)
+        exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Start, // Se va hacia la izquierda
+                animationSpec = tween(500)
+            )
+        },
+        // 3. ANIMACIÓN AL VOLVER (Pop Enter - La pantalla anterior reaparece)
+        popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.End, // Entra desde la izquierda
+                animationSpec = tween(500)
+            )
+        },
+        // 4.  ANIMACIÓN AL VOLVER (Pop Exit - La pantalla actual se cierra)
+        popExitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.End, // Se va hacia la derecha
+                animationSpec = tween(500)
+            )
+        }
     ) {
 
         // ------------------------
@@ -70,9 +102,16 @@ fun AppNavigation() {
                 onBuscarClick = { navController.navigate("buscar") },
                 onFavoritosClick = { navController.navigate("favoritos") },
                 onGitHubClick = { navController.navigate("github") },
-                onFiltrarClick = {}
+                onFiltrarClick = {},
+                onTableroClick = { tableroSeleccionado ->
+                    navController.currentBackStackEntry?.savedStateHandle?.set("tablero", tableroSeleccionado)
+                    navController.navigate("detail")
+                }
             )
         }
+
+
+
 
         // ------------------------
         // PERFIL
@@ -154,9 +193,11 @@ fun AppNavigation() {
         // ------------------------
         // DETAIL
         // ------------------------
-        composable("detail") {
+        composable("detail"){
+            val tablero = navController.previousBackStackEntry?.savedStateHandle?.get<com.example.duocdesk.model.Tablero>("tablero")
+
             DetailScreen(
-                onPerfilClick = { navController.navigate("perfil") },
+                tableroParam = tablero,
                 onBackClick = { navController.popBackStack() }
             )
         }

@@ -1,5 +1,9 @@
 package com.example.duocdesk.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+@Parcelize
 data class Usuario(
     val _id: String? = null,
     val nombre: String = "",
@@ -10,7 +14,7 @@ data class Usuario(
     val edad: Int = 0,
     val rolGlobal: String = "USER",
     val fotoPerfilId: String? = null
-)
+) : Parcelable
 
 fun Usuario.getFotoUrl(): String? {
     if (this._id == null || this.fotoPerfilId == null) return null

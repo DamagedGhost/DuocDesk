@@ -1,138 +1,166 @@
 package com.example.duocdesk.view
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Share
+import androidx.compose.material.icons.filled.PersonAdd
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import coil.compose.AsyncImage
-import com.example.duocdesk.R
-import com.example.duocdesk.viewmodel.PerfilViewModel
-import androidx.compose.material3.MaterialTheme
+import com.example.duocdesk.model.Tablero
+import com.example.duocdesk.viewmodel.TableroDetailViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DetailScreen(onPerfilClick: () -> Unit = {}, onBackClick: () -> Unit = {}) {
+fun DetailScreen(
+    tableroParam: Tablero?, // Recibimos el objeto tablero
+    onBackClick: () -> Unit = {},
+    viewModel: TableroDetailViewModel = viewModel()
+) {
     val context = LocalContext.current
-    val viewModel: PerfilViewModel = viewModel()
-    val photoUri by viewModel.photoUri.collectAsState()
+    val tablero by viewModel.tablero.collectAsState()
+    val mensaje by viewModel.mensaje.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
-    LaunchedEffect(Unit) {
-        viewModel.loadSavedPhoto(context)
+    // Inicializamos el ViewModel con el tablero que recibimos
+    LaunchedEffect(tableroParam) {
+        if (tableroParam != null) {
+            viewModel.setTableroInicial(tableroParam)
+        }
     }
 
-    Scaffold(
-        bottomBar = {
-            BottomAppBar(
-                containerColor = MaterialTheme.colorScheme.surface,
-                contentColor = MaterialTheme.colorScheme.onSurface
-            ) {
-                AnimatedIconButton(onClick = onBackClick, modifier = Modifier.weight(1f)) {
-                    Icon(Icons.Filled.ArrowBackIosNew, contentDescription = "Atrás")
-                }
-                AnimatedIconButton(onClick = {}, modifier = Modifier.weight(1f)) {
-                    Icon(Icons.Filled.Share, contentDescription = "Compartir")
-                }
-            }
+    // Feedback visual (Toasts)
+    LaunchedEffect(mensaje) {
+        mensaje?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            viewModel.limpiarMensaje()
         }
-    ) { paddingValues ->
+    }
+
+    // Variable para el input de invitación
+    var emailInvitado by remember { mutableStateOf("") }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(tablero?.nombre_tablero ?: "Detalle") },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(Icons.Filled.ArrowBack, "Volver")
+                    }
+                },
+                actions = {
+                    // Botón Eliminar
+                    IconButton(onClick = { showDeleteDialog = true }) {
+                        Icon(Icons.Filled.Delete, "Eliminar Tablero", tint = MaterialTheme.colorScheme.error)
+                    }
+                }
+            )
+        }
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(paddingValues)
+                .padding(padding)
+                .padding(16.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surface)
-                    .padding(horizontal = 16.dp, vertical = 12.dp)
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
+            if (tablero != null) {
+                // 1. INFO DEL OWNER
+                Card(
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primaryContainer)
                 ) {
-                    AnimatedIconButton(onClick = onPerfilClick) {
-                        if (photoUri != null) {
-                            AsyncImage(
-                                model = photoUri,
-                                contentDescription = "Perfil",
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(CircleShape),
-                                contentScale = ContentScale.Crop
-                            )
-                        } else {
-                            Icon(Icons.Filled.Person, contentDescription = "Perfil", tint = MaterialTheme.colorScheme.onSurface)
-                        }
+                    Column(Modifier.padding(16.dp)) {
+                        Text("Información del Tablero", style = MaterialTheme.typography.titleMedium)
+                        Spacer(Modifier.height(8.dp))
+                        Text("Dueño: ${tablero?.owner?.nombre ?: "Desconocido"}")
+                        Text("Correo: ${tablero?.owner?.email ?: "-"}", style = MaterialTheme.typography.bodySmall)
                     }
+                }
 
-                    Text("DuocDesk", fontSize = 22.sp, fontWeight = FontWeight.Bold)
-                    Spacer(modifier = Modifier.width(48.dp))
+                Spacer(Modifier.height(24.dp))
+
+                // 2. SECCIÓN INVITAR
+                Text("Invitar Miembros", style = MaterialTheme.typography.titleMedium)
+                Spacer(Modifier.height(8.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedTextField(
+                        value = emailInvitado,
+                        onValueChange = { emailInvitado = it },
+                        label = { Text("Correo del usuario") },
+                        modifier = Modifier.weight(1f),
+                        singleLine = true
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Button(
+                        onClick = {
+                            viewModel.invitarMiembro(emailInvitado)
+                            emailInvitado = ""
+                        },
+                        enabled = !isLoading
+                    ) {
+                        Icon(Icons.Filled.PersonAdd, null)
+                    }
+                }
+
+                Spacer(Modifier.height(24.dp))
+
+                // 3. LISTA DE MIEMBROS
+                Text("Miembros del Equipo (${tablero?.members?.size ?: 0})", style = MaterialTheme.typography.titleMedium)
+                LazyColumn(
+                    contentPadding = PaddingValues(top = 8.dp)
+                ) {
+                    items(tablero?.members ?: emptyList()) { miembro ->
+                        ListItem(
+                            headlineContent = { Text(miembro.nombre) },
+                            supportingContent = { Text(miembro.email) },
+                            leadingContent = { Icon(Icons.Filled.Person, null) }
+                        )
+                        Divider()
+                    }
+                }
+            } else {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
                 }
             }
+        }
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Image(
-                painter = painterResource(id = R.drawable.duoc_desk),
-                contentDescription = "Imagen de DuocDesk",
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(180.dp)
-                    .padding(horizontal = 16.dp)
+        // DIALOGO DE CONFIRMACIÓN DE ELIMINACIÓN
+        if (showDeleteDialog) {
+            AlertDialog(
+                onDismissRequest = { showDeleteDialog = false },
+                title = { Text("¿Eliminar Tablero?") },
+                text = { Text("Esta acción borrará el tablero y todas sus listas permanentemente.") },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            showDeleteDialog = false
+                            viewModel.eliminarTablero(onSuccess = onBackClick)
+                        },
+                        colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.error)
+                    ) {
+                        Text("Eliminar")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showDeleteDialog = false }) { Text("Cancelar") }
+                }
             )
-
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(
-                text = "demo@duocuc.cl",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Medium,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Tablero de trabajo DuocDesk. Software de gestión de tableros y tareas colaborativas para equipos de estudiantes.",
-                fontSize = 14.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .background(MaterialTheme.colorScheme.surfaceContainer)
-                    .height(120.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                Text("Contenido adicional o vista previa de tareas")
-            }
         }
     }
-}
-
-@Preview
-@Composable
-fun DetailScreenPreview() {
-    DetailScreen()
 }

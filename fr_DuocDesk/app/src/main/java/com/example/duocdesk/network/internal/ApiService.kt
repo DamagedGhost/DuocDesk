@@ -7,6 +7,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.*
+import com.example.duocdesk.model.TableroRequest
 
 interface ApiService {
 
@@ -50,10 +51,26 @@ interface ApiService {
 
     // TABLEROS, LISTAS Y TARJETAS
     @GET("api/tableros")
-    suspend fun getTableros(): Response<List<Tablero>>
+    suspend fun getTableros(@Query("userId") userId: String? = null): Response<List<Tablero>>
 
     @POST("api/tableros")
-    suspend fun crearTablero(@Body tablero: Tablero): Response<Tablero>
+    suspend fun crearTablero(@Body tablero: TableroRequest): Response<okhttp3.ResponseBody>
+
+    // Obtener un solo tablero por ID (para ver el detalle fresco)
+    @GET("api/tableros/{id}")
+    suspend fun getTableroById(@Path("id") id: String): Response<Tablero>
+
+    // Eliminar tablero
+    @DELETE("api/tableros/{id}")
+    suspend fun eliminarTablero(@Path("id") id: String): Response<Map<String, String>>
+
+    // Invitar miembro (enviamos un Map con el email)
+    @PUT("api/tableros/{id}/miembros")
+    suspend fun invitarMiembro(
+        @Path("id") id: String,
+        @Body body: Map<String, String>
+    ): Response<Tablero>
+
     // ===========================
 
 

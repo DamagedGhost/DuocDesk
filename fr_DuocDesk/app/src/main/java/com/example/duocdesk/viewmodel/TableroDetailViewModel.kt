@@ -1,0 +1,92 @@
+package com.example.duocdesk.viewmodel
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.duocdesk.model.Tablero
+import com.example.duocdesk.network.internal.RetrofitInstance
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+
+class TableroDetailViewModel : ViewModel() {
+
+    private val _tablero = MutableStateFlow<Tablero?>(null)
+    val tablero = _tablero.asStateFlow()
+
+    private val _mensaje = MutableStateFlow<String?>(null)
+    val mensaje = _mensaje.asStateFlow()
+
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading = _isLoading.asStateFlow()
+
+    // Cargar datos del tablero
+    fun cargarTablero(id: String) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                // Asumimos que agregaste getTableroById en el backend o usamos el objeto pasado
+                // Por ahora, si no tienes endpoint GET /:id, usaremos la lista o implementa GET /:id en node
+                // Si el backend no tiene GET /:id, podemos confiar en que el objeto llegue por argumento,
+                // pero para "refrescar" necesitamos el endpoint.
+                // Usemos la llamada de invitar para actualizar por ahora si no hay GET individual.
+            } catch (e: Exception) {
+                _mensaje.value = "Error: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    // Método auxiliar para setear el tablero inicial desde la navegación
+    fun setTableroInicial(t: Tablero) {
+        _tablero.value = t
+    }
+
+    fun invitarMiembro(email: String) {
+        val idTablero = _tablero.value?._id ?: return
+        if (email.isBlank()) {
+            _mensaje.value = "Ingresa un correo"
+            return
+        }
+
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val body = mapOf("email" to email)
+                val response = RetrofitInstance.api.invitarMiembro(idTablero, body)
+
+                if (response.isSuccessful && response.body() != null) {
+                    _tablero.value = response.body()
+                    _mensaje.value = "Miembro agregado correctamente"
+                } else {
+                    _mensaje.value = "Error: Usuario no encontrado o ya registrado"
+                }
+            } catch (e: Exception) {
+                _mensaje.value = "Error de red: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun eliminarTablero(onSuccess: () -> Unit) {
+        val idTablero = _tablero.value?._id ?: return
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = RetrofitInstance.api.eliminarTablero(idTablero)
+                if (response.isSuccessful) {
+                    onSuccess() // Navegar atrás
+                } else {
+                    _mensaje.value = "No se pudo eliminar el tablero"
+                }
+            } catch (e: Exception) {
+                _mensaje.value = "Error: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun limpiarMensaje() { _mensaje.value = null }
+}
