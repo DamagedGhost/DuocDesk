@@ -1,21 +1,14 @@
 package com.example.duocdesk.view
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.graphicsLayer
-import com.example.duocdesk.view.AnimatedIconButton
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FilterList
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Person
-import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -30,7 +23,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.duocdesk.model.Tablero
 import com.example.duocdesk.viewmodel.PerfilViewModel
+import com.example.duocdesk.viewmodel.TableroViewModel
 
 @Composable
 fun TableroScreen(
@@ -38,21 +33,33 @@ fun TableroScreen(
     onBuscarClick: () -> Unit = {},
     onFavoritosClick: () -> Unit = {},
     onFiltrarClick: () -> Unit = {},
-    onGitHubClick: () -> Unit = {}   // 🔥 NUEVO
+    onGitHubClick: () -> Unit = {},
+            // ViewModels inyectados
+    tableroViewModel: TableroViewModel = viewModel(),
+    perfilViewModel: PerfilViewModel = viewModel()
 ) {
-    var tareas by remember {
-        mutableStateOf(listOf("Tarea N°1", "Tarea N°2", "Tarea N°3", "Tarea N°4"))
-    }
-
     val context = LocalContext.current
-    val viewModel: PerfilViewModel = viewModel()
-    val photoUri by viewModel.photoUri.collectAsState()
+    val photoUri by perfilViewModel.photoUri.collectAsState()
+
+    // Obtenemos los tableros del backend
+    val tableros by tableroViewModel.tableros.collectAsState()
+    val isLoading by tableroViewModel.isLoading.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.loadSavedPhoto(context)
+        perfilViewModel.loadSavedPhoto(context)
+        tableroViewModel.cargarTableros() // Recargar al entrar
     }
 
     Scaffold(
+        // --- BOTÓN FLOTANTE PARA RESERVAR SALA ---
+        floatingActionButton = {
+            ExtendedFloatingActionButton(
+                onClick = { tableroViewModel.abrirReservaSala(context) },
+                icon = { Icon(Icons.Filled.DateRange, "Reservar") },
+                text = { Text("Reservar Sala") },
+                containerColor = MaterialTheme.colorScheme.secondary
+            )
+        },
         bottomBar = {
             BottomAppBar(
                 containerColor = MaterialTheme.colorScheme.surface,
@@ -126,40 +133,69 @@ fun TableroScreen(
                 Text("Ver mis repositorios de GitHub")
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "Planificación de sprint",
-                modifier = Modifier.padding(horizontal = 16.dp),
-                fontSize = 18.sp,
-                fontWeight = FontWeight.Bold
-            )
+            Spacer(modifier = Modifier.height(24.dp))
+            Text("Mis Tableros", style = MaterialTheme.typography.titleLarge)
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-            ) {
-
-                tareas.forEach { tarea ->
-                    OutlinedTextField(
-                        value = tarea,
-                        onValueChange = {},
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        shape = RoundedCornerShape(8.dp),
-                        singleLine = true
-                    )
+            if (isLoading) {
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
+            } else if (tableros.isEmpty()) {
+                // Muestra esto si no hay datos
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("No tienes tableros aún. ¡Crea uno!", color = Color.Gray)
                 }
-
-                OutlinedButton(
-                    onClick = { tareas = tareas + "Nueva tarea" },
-                    modifier = Modifier.fillMaxWidth()
+            } else {
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    modifier = Modifier.padding(top = 8.dp)
                 ) {
-                    Text("+ Agregar tarea")
+                    items(tableros) { tablero ->
+                        TableroItem(
+                            tablero = tablero,
+                            onFavClick = {
+                                // SUGERENCIA DE SEGURIDAD: Evita el !! si es posible
+                                tablero._id?.let { id -> tableroViewModel.toggleFavorito(id) }
+                            }
+                        )
+                    }
+                    //TODO: Botón para crear tablero ficticio (para probar)
+                    item {
+                        OutlinedButton(
+                            onClick = { /* Lógica crear tablero */ },
+                            modifier = Modifier.fillMaxWidth()
+                                .padding(vertical = 8.dp) // Un poco de estilo extra
+                        ) {
+                            Text("+ Nuevo Tablero")
+                        } // <--- ¡ESTA LLAVE FALTABA!
+                    }
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun TableroItem(tablero: Tablero, onFavClick: () -> Unit) {
+    Card(
+        elevation = CardDefaults.cardElevation(4.dp),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(tablero.nombre_tablero, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text("${tablero.listas.size} listas activas", fontSize = 14.sp)
+            }
+            IconButton(onClick = onFavClick) {
+                Icon(
+                    imageVector = if (tablero.esFavorito) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
+                    contentDescription = "Favorito",
+                    tint = if (tablero.esFavorito) Color.Red else Color.Gray
+                )
             }
         }
     }
