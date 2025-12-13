@@ -11,7 +11,8 @@ import com.example.duocdesk.viewmodel.PerfilEditViewModel
 @Composable
 fun EditarPerfilScreen(
     vm: PerfilEditViewModel = viewModel(),
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    onAccountDeleted: () -> Unit
 ) {
     val usuario by vm.usuario.collectAsState()
     val mensaje by vm.mensaje.collectAsState()
@@ -111,7 +112,7 @@ fun EditarPerfilScreen(
                             onClick = {
                                 showDialog = false
                                 vm.eliminarCuenta {
-                                    onBack()
+                                    onAccountDeleted()
                                 }
                             }
                         ) {

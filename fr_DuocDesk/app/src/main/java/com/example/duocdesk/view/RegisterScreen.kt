@@ -129,6 +129,40 @@ fun RegisterScreen(
                 }
             )
 
+            Spacer(Modifier.height(8.dp))
+
+            // ---- CARRERA ----
+            OutlinedTextField(
+                value = uiState.carrera,
+                onValueChange = viewModel::onCarreraChange,
+                label = { Text("Carrera") },
+                modifier = Modifier.fillMaxWidth(),
+                isError = uiState.errores.carrera != null,
+                supportingText = {
+                    AnimatedVisibility(uiState.errores.carrera != null) {
+                        Text(uiState.errores.carrera ?: "")
+                    }
+                }
+            )
+
+            Spacer(Modifier.height(8.dp))
+
+            // ---- EDAD ----
+            OutlinedTextField(
+                value = uiState.edad,
+                onValueChange = viewModel::onEdadChange,
+                label = { Text("Edad") },
+                modifier = Modifier.fillMaxWidth(),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number), // Teclado numérico
+                isError = uiState.errores.edad != null,
+                supportingText = {
+                    AnimatedVisibility(uiState.errores.edad != null) {
+                        Text(uiState.errores.edad ?: "")
+                    }
+                }
+            )
+
+
             Spacer(Modifier.height(20.dp))
 
             // ---- BOTÓN REGISTRARSE ----
@@ -140,8 +174,8 @@ fun RegisterScreen(
                             apellido = uiState.apellido,
                             email = uiState.email,
                             password = uiState.password,
-                            carrera = "Ing informática",
-                            edad = 18,
+                            carrera = uiState.carrera,
+                            edad = uiState.edad.toIntOrNull() ?: 0,
                             rolGlobal = "USER"
                         )
                     )

@@ -11,6 +11,7 @@ import com.example.duocdesk.viewmodel.LoginViewModel
 import com.example.duocdesk.viewmodel.RegisterViewModel
 import com.example.duocdesk.viewmodel.GitHubViewModel
 
+
 @Composable
 fun AppNavigation() {
 
@@ -79,7 +80,14 @@ fun AppNavigation() {
         composable("perfil") {
             PerfilScreen(
                 onCloseClick = { navController.popBackStack() },
-                onEditarPerfilClick = { navController.navigate("editar_perfil") }  // ← CORREGIDO
+                onEditarPerfilClick = { navController.navigate("editar_perfil") },
+                onLogout = {
+                    com.example.duocdesk.model.UserSession.currentUser = null
+
+                    navController.navigate("login") {
+                        popUpTo(0) { inclusive = true }
+                    }
+                }
             )
         }
 
@@ -89,7 +97,10 @@ fun AppNavigation() {
         composable("editar_perfil") {
             EditarPerfilScreen(
                 onBack = {
-                    navController.navigate("login") {   // ← vuelve al login si se elimina
+                    navController.popBackStack()
+                },
+                onAccountDeleted = {
+                    navController.navigate("login") {
                         popUpTo("tablero") { inclusive = true }
                     }
                 }

@@ -33,6 +33,16 @@ class RegisterViewModel(
         _uiState.update { it.copy(password = valor, errores = it.errores.copy(password = null)) }
     }
 
+    fun onCarreraChange(valor: String) {
+        _uiState.update { it.copy(carrera = valor, errores = it.errores.copy(carrera = null)) }
+    }
+
+    fun onEdadChange(valor: String) {
+        if (valor.all { char -> char.isDigit() }) {
+            _uiState.update { it.copy(edad = valor, errores = it.errores.copy(edad = null)) }
+        }
+    }
+
     fun registrar(usuario: Usuario, validar: Boolean = true) {
         if (validar && !validarFormulario()) return
 
@@ -78,7 +88,9 @@ class RegisterViewModel(
             nombre = if (estado.nombre.isBlank()) "El nombre es obligatorio" else null,
             apellido = if (estado.apellido.isBlank()) "El apellido es obligatorio" else null,
             email = if (!estado.email.contains("@")) "Correo inválido" else null,
-            password = if (estado.password.length < 4) "Mínimo 4 caracteres" else null
+            password = if (estado.password.length < 4) "Mínimo 4 caracteres" else null,
+            carrera = if (estado.carrera.isBlank()) "La carrera es obligatoria" else null,
+            edad = if (estado.edad.isBlank()) "La edad es obligatoria" else null
         )
 
         _uiState.update { it.copy(errores = errores) }
@@ -86,6 +98,8 @@ class RegisterViewModel(
         return errores.nombre == null &&
                 errores.apellido == null &&
                 errores.email == null &&
-                errores.password == null
+                errores.password == null &&
+                errores.carrera == null &&
+                errores.edad == null
     }
 }

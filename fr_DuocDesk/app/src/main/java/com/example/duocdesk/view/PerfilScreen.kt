@@ -32,7 +32,8 @@ import com.example.duocdesk.model.getFotoUrl
 fun PerfilScreen(
     viewModel: PerfilViewModel = viewModel(),
     onCloseClick: () -> Unit = {},
-    onEditarPerfilClick: () -> Unit
+    onEditarPerfilClick: () -> Unit,
+    onLogout: () -> Unit
 ) {
     val context = LocalContext.current
     val photoUri by viewModel.photoUri.collectAsState()
@@ -133,6 +134,22 @@ fun PerfilScreen(
                 PerfilItem("Foros")
                 PerfilItem("Favoritos")
                 PerfilItem("Configuración")
+
+                Spacer(modifier = Modifier.weight(1f))
+
+                Button(
+                    onClick = onLogout,
+                    modifier = Modifier.fillMaxWidth(),
+
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer,
+                        contentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
+                    shape = MaterialTheme.shapes.medium
+                ) {
+                    Text("Cerrar Sesión", fontWeight = FontWeight.Bold)
+                }
+
             }
         }
     }
@@ -149,10 +166,4 @@ fun PerfilItem(text: String, onClick: (() -> Unit)? = null) {
         Text(text, fontSize = 18.sp)
         HorizontalDivider()
     }
-}
-
-@Preview
-@Composable
-fun PerfilScreenPreview() {
-    PerfilScreen(onEditarPerfilClick = {})
 }

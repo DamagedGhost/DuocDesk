@@ -117,11 +117,7 @@ fun LoginScreen(
                 }
             }
 
-            // ... (Resto de botones) ...
-            Spacer(modifier = Modifier.height(16.dp))
-            TextButton(onClick = onRecoverPasswordClick, enabled = !uiState.isLoading) {
-                Text("Recuperar Contraseña")
-            }
+
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedButton(
                 onClick = onCreateAccountClick,
