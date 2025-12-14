@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class Tablero(
     val _id: String? = null,
     val nombre_tablero: String,
-    val owner: Usuario,
+    val owner: Usuario? = null,
     val members: List<Usuario> = emptyList(),
     val listas: List<ListaTarea> = emptyList(),
     val fechaCreacion: String? = null,

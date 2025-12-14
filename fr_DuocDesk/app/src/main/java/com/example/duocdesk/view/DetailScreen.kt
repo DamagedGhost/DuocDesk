@@ -86,7 +86,7 @@ fun DetailScreen(
                         Text("Información del Tablero", style = MaterialTheme.typography.titleMedium)
                         Spacer(Modifier.height(8.dp))
                         Text("Dueño: ${tablero?.owner?.nombre ?: "Desconocido"}")
-                        Text("Correo: ${tablero?.owner?.email ?: "-"}", style = MaterialTheme.typography.bodySmall)
+                        Text("Correo: ${tablero?.owner?.email ?: "Sin correo"}")
                     }
                 }
 

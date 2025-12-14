@@ -3,6 +3,7 @@ package com.example.duocdesk.viewmodel
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.duocdesk.model.Tablero
@@ -36,12 +37,27 @@ class TableroViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             try {
+                Log.d("TableroViewModel", "Iniciando petición a la API...") // Log de depuración
+
                 val response = RetrofitInstance.api.getTableros()
+
+                Log.d("TableroViewModel", "Código de respuesta: ${response.code()}") // Ver código HTTP
+
                 if (response.isSuccessful) {
-                    _tableros.value = response.body() ?: emptyList()
+                    val lista = response.body() ?: emptyList()
+                    Log.d("TableroViewModel", "Tableros recibidos: ${lista.size}")
+                    _tableros.value = lista
+                } else {
+                    val errorBody = response.errorBody()?.string()
+                    Log.e("TableroViewModel", "Error del servidor: $errorBody") // Imprimir error del backend
+                    _mensaje.value = "Error servidor: ${response.code()}"
                 }
             } catch (e: Exception) {
-                e.printStackTrace()
+                // 🔥 ESTA ES LA PARTE IMPORTANTE 🔥
+                Log.e("TableroViewModel", "EXCEPCIÓN FATAL", e) // Imprime todo el error rojo en Logcat
+
+                // Mostrar un resumen en el mensaje
+                _mensaje.value = "Error: ${e.javaClass.simpleName} - ${e.message}"
             } finally {
                 _isLoading.value = false
             }
