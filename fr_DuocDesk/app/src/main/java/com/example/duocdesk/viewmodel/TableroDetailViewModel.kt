@@ -49,6 +49,8 @@ class TableroDetailViewModel : ViewModel() {
             return
         }
 
+
+
         viewModelScope.launch {
             _isLoading.value = true
             try {
@@ -63,6 +65,28 @@ class TableroDetailViewModel : ViewModel() {
                 }
             } catch (e: Exception) {
                 _mensaje.value = "Error de red: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun eliminarMiembro(idMiembro: String) {
+        val idTablero = _tablero.value?._id ?: return
+
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = RetrofitInstance.api.eliminarMiembro(idTablero, idMiembro)
+
+                if (response.isSuccessful && response.body() != null) {
+                    _tablero.value = response.body()
+                    _mensaje.value = "Miembro eliminado."
+                } else {
+                    _mensaje.value = "Error al eliminar: ${response.code()}"
+                }
+            } catch (e: Exception) {
+                _mensaje.value = "Error de conexión: ${e.message}"
             } finally {
                 _isLoading.value = false
             }

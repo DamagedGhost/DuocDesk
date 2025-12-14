@@ -52,11 +52,11 @@ fun SearchResultScreen(
                 AnimatedIconButton(onClick = { navController.navigate("buscar") {launchSingleTop = true}}, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Search, contentDescription = "Buscar")
                 }
+                AnimatedIconButton(onClick = {navController.navigate("tablero") {launchSingleTop = true}}, modifier = Modifier.weight(1f)) {
+                    Icon(Icons.Filled.FilterList, contentDescription = "Tableros")
+                }
                 AnimatedIconButton(onClick = { navController.navigate("favoritos") {launchSingleTop = true}}, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Favorite, contentDescription = "Favoritos")
-                }
-                AnimatedIconButton(onClick = {}, modifier = Modifier.weight(1f)) {
-                    Icon(Icons.Filled.FilterList, contentDescription = "Filtrar")
                 }
             }
         }

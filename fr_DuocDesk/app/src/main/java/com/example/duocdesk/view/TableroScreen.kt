@@ -146,11 +146,11 @@ fun TableroScreen(
                 AnimatedIconButton(onClick = onBuscarClick, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Search, contentDescription = "Buscar")
                 }
+                AnimatedIconButton(onClick = onFiltrarClick, modifier = Modifier.weight(1f)) {
+                    Icon(Icons.Filled.FilterList, contentDescription = "Tableros")
+                }
                 AnimatedIconButton(onClick = onFavoritosClick, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Favorite, contentDescription = "Favoritos")
-                }
-                AnimatedIconButton(onClick = onFiltrarClick, modifier = Modifier.weight(1f)) {
-                    Icon(Icons.Filled.FilterList, contentDescription = "Filtrar")
                 }
             }
         }
@@ -342,7 +342,7 @@ fun TableroItem(
                 )
             }
 
-            IconButton(onClick = onFavClick) {
+            AnimatedIconButton(onClick = onFavClick) {
                 Icon(
                     imageVector = if (tablero.esFavorito) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
                     contentDescription = "Favorito",
@@ -355,15 +355,7 @@ fun TableroItem(
 
 @Preview
 @Composable
-fun TableroItemPreview() {
-    TableroItem(
-        tablero = Tablero(
-            _id = "1",
-            nombre_tablero = "Proyecto DuocDesk",
-            listas = listOf(),
-            esFavorito = true
-        ),
-        onClick = {},
-        onFavClick = {}
+fun TableroScreen() {
+    TableroScreen(
     )
 }

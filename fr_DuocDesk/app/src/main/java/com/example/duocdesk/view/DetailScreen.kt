@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.duocdesk.model.Tablero
 import com.example.duocdesk.viewmodel.TableroDetailViewModel
+import androidx.compose.material.icons.filled.Close
+import com.example.duocdesk.model.UserSession
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -33,6 +36,8 @@ fun DetailScreen(
     val tablero by viewModel.tablero.collectAsState()
     val mensaje by viewModel.mensaje.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
+    val currentUser = UserSession.currentUser
+    val isOwner = tablero?.owner?._id == currentUser?._id
 
     // Inicializamos el ViewModel con el tablero que recibimos
     LaunchedEffect(tableroParam) {
@@ -64,8 +69,15 @@ fun DetailScreen(
                 },
                 actions = {
                     // Botón Eliminar
-                    IconButton(onClick = { showDeleteDialog = true }) {
-                        Icon(Icons.Filled.Delete, "Eliminar Tablero", tint = MaterialTheme.colorScheme.error)
+                    if (isOwner) {
+                        //Solo mostramos si es el dueño
+                        IconButton(onClick = { showDeleteDialog = true }) {
+                            Icon(
+                                Icons.Filled.Delete,
+                                "Eliminar Tablero",
+                                tint = MaterialTheme.colorScheme.error
+                            )
+                        }
                     }
                 }
             )
@@ -124,11 +136,28 @@ fun DetailScreen(
                 LazyColumn(
                     contentPadding = PaddingValues(top = 8.dp)
                 ) {
-                    items(tablero?.members ?: emptyList()) { miembro ->
+                    items(tablero?.members?.filterNotNull() ?: emptyList()) { miembro ->
                         ListItem(
                             headlineContent = { Text(miembro.nombre) },
                             supportingContent = { Text(miembro.email) },
-                            leadingContent = { Icon(Icons.Filled.Person, null) }
+                            leadingContent = { Icon(Icons.Filled.Person, null) },
+
+                            trailingContent = {
+                                if (isOwner && miembro._id != currentUser?._id) {
+                                    IconButton(
+                                        onClick = {
+                                            // Llamamos a la función del ViewModel
+                                            miembro._id?.let { id -> viewModel.eliminarMiembro(id) }
+                                        }
+                                    ) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Close,
+                                            contentDescription = "Eliminar miembro",
+                                            tint = MaterialTheme.colorScheme.error // Color rojo
+                                        )
+                                    }
+                                }
+                            }
                         )
                         Divider()
                     }

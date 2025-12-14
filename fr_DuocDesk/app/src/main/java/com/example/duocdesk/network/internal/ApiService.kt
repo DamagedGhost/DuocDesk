@@ -72,6 +72,13 @@ interface ApiService {
         @Body body: Map<String, String>
     ): Response<Tablero>
 
+    // Eliminar miembro de un tablero
+    @DELETE("api/tableros/{id}/miembros/{miembroId}")
+    suspend fun eliminarMiembro(
+        @Path("id") idTablero: String,
+        @Path("miembroId") idMiembro: String
+    ): Response<Tablero>
+
     // ===========================
 
     @GET("api/notificaciones")

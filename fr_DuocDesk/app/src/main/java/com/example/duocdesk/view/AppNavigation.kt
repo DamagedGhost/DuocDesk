@@ -14,18 +14,16 @@ import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.ui.platform.LocalContext
 import com.example.duocdesk.util.SessionManager
-
+import com.example.duocdesk.viewmodel.TableroViewModel
 
 @Composable
 fun AppNavigation() {
     val context = LocalContext.current
     val sessionManager = remember { SessionManager(context) }
-
     // Determinar el destino inicial basado en la sesión del usuario
     val startDestination = if (sessionManager.getUser() != null) "tablero" else "login"
-
-
     val navController = rememberNavController()
+    val sharedTableroViewModel: TableroViewModel = viewModel()
 
     NavHost(
         navController = navController,
@@ -106,6 +104,7 @@ fun AppNavigation() {
         // ------------------------
         composable("tablero") {
             TableroScreen(
+                tableroViewModel = sharedTableroViewModel,
                 onPerfilClick = { navController.navigate("perfil") },
                 onBuscarClick = { navController.navigate("buscar") },
                 onFavoritosClick = { navController.navigate("favoritos") },
@@ -180,9 +179,10 @@ fun AppNavigation() {
         // ------------------------
         composable("favoritos") {
             FavoritosScreen(
+                viewModel = sharedTableroViewModel,
                 navController = navController,
                 onPerfilClick = { navController.navigate("perfil") },
-                onBackClick = { navController.popBackStack() }
+
             )
         }
 
