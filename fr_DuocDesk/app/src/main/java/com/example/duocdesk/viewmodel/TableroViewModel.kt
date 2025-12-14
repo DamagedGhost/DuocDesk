@@ -1,10 +1,11 @@
 package com.example.duocdesk.viewmodel
 
+import android.app.Application
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.duocdesk.model.Tablero
 import com.example.duocdesk.model.UserSession
@@ -16,7 +17,7 @@ import com.example.duocdesk.model.TableroRequest
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 
-class TableroViewModel : ViewModel() {
+class TableroViewModel(application: Application) : AndroidViewModel(application) {
 
     private val _tableros = MutableStateFlow<List<Tablero>>(emptyList())
     val tableros = _tableros.asStateFlow()
@@ -39,15 +40,37 @@ class TableroViewModel : ViewModel() {
     private val _isRefreshing = MutableStateFlow(false)
     val isRefreshing = _isRefreshing.asStateFlow()
 
+    // Memoria para guardar los IDs favoritos
+    private val idsFavoritos = mutableSetOf<String>()
+
     init {
         cargarTableros()
         iniciarPolling()
     }
 
+    private fun getPrefs() = getApplication<Application>().getSharedPreferences("duocdesk_favs", Context.MODE_PRIVATE)
+
+    private fun cargarFavoritosLocales() {
+        val userId = UserSession.currentUser?._id ?: return
+        // Buscamos los favoritos guardados bajo la llave "favs_ID_USUARIO"
+        val guardados = getPrefs().getStringSet("favs_$userId", emptySet())
+
+        idsFavoritos.clear() // Limpiamos la memoria anterior (por si cambió de usuario)
+        if (guardados != null) {
+            idsFavoritos.addAll(guardados)
+        }
+    }
+
+    private fun guardarFavoritosLocales() {
+        val userId = UserSession.currentUser?._id ?: return
+        // Guardamos el set actual asociado al ID del usuario
+        getPrefs().edit().putStringSet("favs_$userId", idsFavoritos.toSet()).apply()
+    }
+
     fun refresh() {
         viewModelScope.launch {
             _isRefreshing.value = true
-            cargarTableros() // Reutilizamos tu función de carga
+            cargarTableros() // función de carga
             _isRefreshing.value = false
         }
     }
@@ -104,6 +127,7 @@ class TableroViewModel : ViewModel() {
         viewModelScope.launch {
             _isLoading.value = true
             try {
+                cargarFavoritosLocales()
                 Log.d("TableroViewModel", "Iniciando petición a la API...") // Log de depuración
 
                 val currentUser = UserSession.currentUser
@@ -113,15 +137,22 @@ class TableroViewModel : ViewModel() {
 
                 if (response.isSuccessful) {
                     val lista = response.body() ?: emptyList()
-                    Log.d("TableroViewModel", "Tableros recibidos: ${lista.size}")
-                    _tableros.value = lista
+                    val listaFusionada = lista.map { tablero ->
+                        if (idsFavoritos.contains(tablero._id)) {
+                            tablero.copy(esFavorito = true)
+                        } else {
+                            tablero
+                        }
+                    }
+                    _tableros.value = listaFusionada
+                    Log.d("TableroViewModel", "Tableros cargados y fusionados: ${listaFusionada.size}")
+
                 } else {
                     val errorBody = response.errorBody()?.string()
                     Log.e("TableroViewModel", "Error del servidor: $errorBody") // Imprimir error del backend
                     _mensaje.value = "Error servidor: ${response.code()}"
                 }
             } catch (e: Exception) {
-                // 🔥 ESTA ES LA PARTE IMPORTANTE 🔥
                 Log.e("TableroViewModel", "EXCEPCIÓN FATAL", e) // Imprime todo el error rojo en Logcat
 
                 // Mostrar un resumen en el mensaje
@@ -155,8 +186,24 @@ class TableroViewModel : ViewModel() {
 
     // Lógica simple de favoritos (en memoria por ahora)
     fun toggleFavorito(tableroId: String) {
+        // ACTUALIZAR MEMORIA Y LISTA VISUAL
+
+        // Actualizamos el Set de IDs (Nuestra "Base de datos" en memoria)
+        if (idsFavoritos.contains(tableroId)) {
+            idsFavoritos.remove(tableroId)
+        } else {
+            idsFavoritos.add(tableroId)
+        }
+        //Actualizar almacenamiento persistente
+        guardarFavoritosLocales()
+        // Actualizamos la lista observable (La UI)
         val listaActualizada = _tableros.value.map {
-            if (it._id == tableroId) it.copy(esFavorito = !it.esFavorito) else it
+            if (it._id == tableroId) {
+                // Invertimos el valor actual
+                it.copy(esFavorito = !it.esFavorito)
+            } else {
+                it
+            }
         }
         _tableros.value = listaActualizada
     }
