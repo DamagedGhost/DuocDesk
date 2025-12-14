@@ -1,15 +1,22 @@
 package com.example.duocdesk.view
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.pm.PackageManager
+import android.os.Build
+import android.widget.Toast
+import android.Manifest
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,13 +29,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
+import androidx.core.app.NotificationManagerCompat
 import coil.compose.AsyncImage
 import com.example.duocdesk.model.Tablero
 import com.example.duocdesk.viewmodel.PerfilViewModel
 import com.example.duocdesk.viewmodel.TableroViewModel
-import androidx.compose.material.icons.filled.Add
-import android.widget.Toast
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TableroScreen(
     onPerfilClick: () -> Unit = {},
@@ -37,20 +46,61 @@ fun TableroScreen(
     onFiltrarClick: () -> Unit = {},
     onGitHubClick: () -> Unit = {},
     onTableroClick: (Tablero) -> Unit = {},
-            // ViewModels inyectados
+    // ViewModels inyectados
     tableroViewModel: TableroViewModel = viewModel(),
     perfilViewModel: PerfilViewModel = viewModel()
-
 ) {
     val context = LocalContext.current
     val photoUri by perfilViewModel.photoUri.collectAsState()
 
     var showCreateDialog by remember { mutableStateOf(false) }
     var newTableroName by remember { mutableStateOf("") }
+
     val mensaje by tableroViewModel.mensaje.collectAsState()
-    // Obtenemos los tableros del backend
     val tableros by tableroViewModel.tableros.collectAsState()
     val isLoading by tableroViewModel.isLoading.collectAsState()
+    val notificacion by tableroViewModel.ultimaNotificacion.collectAsState()
+
+    // Estado para el Pull to Refresh
+    val isRefreshing by tableroViewModel.isRefreshing.collectAsState()
+    val pullToRefreshState = rememberPullToRefreshState() // Mantenemos el estado por si quieres personalizarlo
+
+    // --- FUNCIÓN DE NOTIFICACIONES ---
+    fun mostrarNotificacionSistema(context: android.content.Context, titulo: String, mensaje: String) {
+        val channelId = "invitaciones_channel"
+        val notificationId = System.currentTimeMillis().toInt()
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val name = "Invitaciones"
+            val importance = NotificationManager.IMPORTANCE_HIGH
+            val channel = NotificationChannel(channelId, name, importance).apply {
+                description = "Notificaciones de nuevos tableros"
+            }
+            val notificationManager = context.getSystemService(android.content.Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        val builder = NotificationCompat.Builder(context, channelId)
+            .setSmallIcon(android.R.drawable.ic_dialog_email)
+            .setContentTitle(titulo)
+            .setContentText(mensaje)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setAutoCancel(true)
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            NotificationManagerCompat.from(context).notify(notificationId, builder.build())
+        }
+    }
+
+    // Efectos
+    LaunchedEffect(notificacion) {
+        notificacion?.let {
+            mostrarNotificacionSistema(context, "DuocDesk", it)
+            Toast.makeText(context, "🔔 $it", Toast.LENGTH_LONG).show()
+            tableroViewModel.limpiarNotificacion()
+        }
+    }
 
     LaunchedEffect(mensaje) {
         mensaje?.let {
@@ -59,20 +109,19 @@ fun TableroScreen(
         }
     }
 
-
     LaunchedEffect(Unit) {
         perfilViewModel.loadSavedPhoto(context)
-        tableroViewModel.cargarTableros() // Recargar al entrar
+        // Ya no cargamos forzosamente aquí si tienes persistencia,
+        // pero está bien para asegurar datos frescos al entrar
+        tableroViewModel.cargarTableros()
     }
 
     Scaffold(
-        // --- BOTÓN FLOTANTE PARA RESERVAR SALA ---
         floatingActionButton = {
             Column(
                 horizontalAlignment = Alignment.End,
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // 1. Botón Crear Tablero
                 FloatingActionButton(
                     onClick = { showCreateDialog = true },
                     containerColor = MaterialTheme.colorScheme.primary,
@@ -81,8 +130,6 @@ fun TableroScreen(
                 ) {
                     Icon(Icons.Filled.Add, "Crear Tablero")
                 }
-
-                // 2. Botón Reservar Sala (AHORA ESTÁ DENTRO DE LA COLUMNA)
                 ExtendedFloatingActionButton(
                     onClick = { tableroViewModel.abrirReservaSala(context) },
                     icon = { Icon(Icons.Filled.DateRange, "Reservar") },
@@ -116,7 +163,12 @@ fun TableroScreen(
                 .padding(paddingValues)
         ) {
 
-            // TOP BAR
+            // ---------------------------------------------------------
+            // 1. ZONA FIJA (Header, Botón Github, Título)
+            //    Esta parte NO se mueve ni se refresca al deslizar
+            // ---------------------------------------------------------
+
+            // Top Bar Personalizada
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -146,7 +198,6 @@ fun TableroScreen(
                             )
                         }
                     }
-
                     Text("Tablero", fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.width(48.dp))
                 }
@@ -154,7 +205,6 @@ fun TableroScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            //BOTÓN GITHUB
             Button(
                 onClick = onGitHubClick,
                 modifier = Modifier
@@ -165,50 +215,64 @@ fun TableroScreen(
             }
 
             Spacer(modifier = Modifier.height(24.dp))
+
             Text("Mis Tableros",
                 style = MaterialTheme.typography.titleLarge,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 
-            if (isLoading) {
-                CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-            } else if (tableros.isEmpty()) {
-                // Muestra esto si no hay datos
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text("No tienes tableros aún. ¡Crea uno!", color = Color.Gray)
-                }
-            } else {
-                LazyColumn(
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
-                    modifier = Modifier
-                        .padding(top = 8.dp)
-                        .padding(horizontal = 16.dp)
-                ) {
-                    items(tableros) { tablero ->
-                        TableroItem(
-                            tablero = tablero,
-                            onClick = {onTableroClick(tablero)},
-                            onFavClick = {
+            Spacer(modifier = Modifier.height(8.dp))
 
-                                tablero._id?.let { id -> tableroViewModel.toggleFavorito(id) }
-                            }
-
-                        )
+            // ---------------------------------------------------------
+            // 2. ZONA DESLIZABLE (Lista de Tableros)
+            //    Usa 'weight(1f)' para ocupar todo el espacio restante.
+            //    Aquí aplicamos el PullToRefreshBox
+            // ---------------------------------------------------------
+            PullToRefreshBox(
+                isRefreshing = isRefreshing,
+                onRefresh = { tableroViewModel.refresh() },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f) // <--- CLAVE: Ocupa todo el espacio sobrante
+            ) {
+                if (isLoading && !isRefreshing) {
+                    // Carga inicial (spinner al centro)
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        CircularProgressIndicator()
                     }
-                    //TODO: Botón para crear tablero ficticio (para probar)
-                    item {
-                        OutlinedButton(
-                            onClick = { /* Lógica crear tablero */ },
-                            modifier = Modifier.fillMaxWidth()
-                                .padding(vertical = 8.dp) // Un poco de estilo extra
-                        ) {
-                            Text("+ Nuevo Tablero")
+                } else if (tableros.isEmpty()) {
+                    // Lista vacía
+                    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text("No hay tableros. ¡Desliza para actualizar!", color = Color.Gray)
+                    }
+                } else {
+                    // Lista con datos
+                    LazyColumn(
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
+                        modifier = Modifier.fillMaxSize(),
+                        // Padding extra abajo para que el FAB no tape el último item
+                        contentPadding = PaddingValues(
+                            top = 8.dp,
+                            start = 16.dp,
+                            end = 16.dp,
+                            bottom = 100.dp
+                        )
+                    ) {
+                        items(tableros) { tablero ->
+                            TableroItem(
+                                tablero = tablero,
+                                onClick = { onTableroClick(tablero) },
+                                onFavClick = {
+                                    tablero._id?.let { id -> tableroViewModel.toggleFavorito(id) }
+                                }
+                            )
                         }
                     }
                 }
             }
         }
 
+        // DIALOGO DE CREACIÓN
         if (showCreateDialog) {
             AlertDialog(
                 onDismissRequest = { showCreateDialog = false },
@@ -231,31 +295,32 @@ fun TableroScreen(
                         onClick = {
                             if (newTableroName.isNotBlank()) {
                                 tableroViewModel.crearTablero(newTableroName)
-                                newTableroName = "" // Limpiar campo
-                                showCreateDialog = false // Cerrar diálogo
+                                newTableroName = ""
+                                showCreateDialog = false
                             }
                         }
-                    ) {
-                        Text("Crear")
-                    }
+                    ) { Text("Crear") }
                 },
                 dismissButton = {
-                    TextButton(onClick = { showCreateDialog = false }) {
-                        Text("Cancelar")
-                    }
+                    TextButton(onClick = { showCreateDialog = false }) { Text("Cancelar") }
                 }
             )
         }
     }
 }
 
-
 @Composable
-fun TableroItem(tablero: Tablero, onFavClick: () -> Unit, onClick: () -> Unit) {
+fun TableroItem(
+    tablero: Tablero,
+    onClick: () -> Unit,
+    onFavClick: () -> Unit
+) {
     Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick), // Hacemos clickeable toda la tarjeta
         elevation = CardDefaults.cardElevation(4.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
-        modifier = Modifier.clickable {onClick()}
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer)
     ) {
         Row(
             modifier = Modifier
@@ -264,10 +329,19 @@ fun TableroItem(tablero: Tablero, onFavClick: () -> Unit, onClick: () -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Text(tablero.nombre_tablero, fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                Text("${tablero.listas.size} listas activas", fontSize = 14.sp)
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = tablero.nombre_tablero,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp
+                )
+                Text(
+                    text = "${tablero.listas.size} listas activas",
+                    fontSize = 14.sp,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             }
+
             IconButton(onClick = onFavClick) {
                 Icon(
                     imageVector = if (tablero.esFavorito) Icons.Filled.Favorite else Icons.Filled.FavoriteBorder,
@@ -279,8 +353,17 @@ fun TableroItem(tablero: Tablero, onFavClick: () -> Unit, onClick: () -> Unit) {
     }
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun TableroScreenPreview() {
-    TableroScreen()
+fun TableroItemPreview() {
+    TableroItem(
+        tablero = Tablero(
+            _id = "1",
+            nombre_tablero = "Proyecto DuocDesk",
+            listas = listOf(),
+            esFavorito = true
+        ),
+        onClick = {},
+        onFavClick = {}
+    )
 }

@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.duocdesk.R
+import com.example.duocdesk.util.SessionManager
 import com.example.duocdesk.viewmodel.LoginViewModel
 
 @Composable
@@ -29,9 +31,12 @@ fun LoginScreen(
 ) {
     // 1. Recogemos el estado (UiState) del ViewModel
     val uiState by viewModel.uiState.collectAsState()
+    val context = LocalContext.current
 
     // 2. Si el login fue exitoso, mostramos el diálogo
     if (uiState.loginSuccess) {
+        val sessionManager = SessionManager(context)
+        uiState.usuario?.let { sessionManager.saveUser(it) }
         SuccessDialog(
             title = "¡Bienvenido!",
             message = "Inicio de sesión exitoso. Serás dirigido al tablero.",

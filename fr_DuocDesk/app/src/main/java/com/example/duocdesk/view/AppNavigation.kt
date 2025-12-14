@@ -12,19 +12,27 @@ import com.example.duocdesk.viewmodel.RegisterViewModel
 import com.example.duocdesk.viewmodel.GitHubViewModel
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
-
+import androidx.compose.ui.platform.LocalContext
+import com.example.duocdesk.util.SessionManager
 
 
 @Composable
 fun AppNavigation() {
+    val context = LocalContext.current
+    val sessionManager = remember { SessionManager(context) }
+
+    // Determinar el destino inicial basado en la sesión del usuario
+    val startDestination = if (sessionManager.getUser() != null) "tablero" else "login"
+
 
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
-        startDestination = "login",
+        // uso de la variable startDestination
+        startDestination = startDestination,
 
-        // 1. ANIMACIÓN DE ENTRADA (Al navegar hacia un destino nuevo)
+        // 1. ANIMACIÓN DE ENTRADA 🔥🔥(Al navegar hacia un destino nuevo)
         enterTransition = {
             slideIntoContainer(
                 towards = AnimatedContentTransitionScope.SlideDirection.Start, // Entra desde la derecha

@@ -35,6 +35,8 @@ fun PerfilScreen(
     onEditarPerfilClick: () -> Unit,
     onLogout: () -> Unit
 ) {
+    val sessionManager = com.example.duocdesk.util.SessionManager(LocalContext.current)
+
     val context = LocalContext.current
     val photoUri by viewModel.photoUri.collectAsState()
 
@@ -138,7 +140,10 @@ fun PerfilScreen(
                 Spacer(modifier = Modifier.weight(1f))
 
                 Button(
-                    onClick = onLogout,
+                    onClick = {
+                        sessionManager.logout()
+                        onLogout()
+                    },
                     modifier = Modifier.fillMaxWidth(),
 
                     colors = ButtonDefaults.buttonColors(

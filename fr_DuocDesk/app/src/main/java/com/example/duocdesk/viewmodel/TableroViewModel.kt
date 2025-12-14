@@ -13,6 +13,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.example.duocdesk.model.TableroRequest
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 
 class TableroViewModel : ViewModel() {
 
@@ -26,12 +28,77 @@ class TableroViewModel : ViewModel() {
     private val _textoBusqueda = MutableStateFlow("")
     val textoBusqueda = _textoBusqueda.asStateFlow()
 
-    init {
-        cargarTableros()
-    }
-
     private val _mensaje = MutableStateFlow<String?>(null)
     val mensaje = _mensaje.asStateFlow()
+
+    // estado para mostrar notificaciones en UI
+    private val _ultimaNotificacion = MutableStateFlow<String?>(null)
+    val ultimaNotificacion = _ultimaNotificacion.asStateFlow()
+
+    // NUEVO: Estado específico para el Pull-to-Refresh
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing = _isRefreshing.asStateFlow()
+
+    init {
+        cargarTableros()
+        iniciarPolling()
+    }
+
+    fun refresh() {
+        viewModelScope.launch {
+            _isRefreshing.value = true
+            cargarTableros() // Reutilizamos tu función de carga
+            _isRefreshing.value = false
+        }
+    }
+
+    private fun iniciarPolling() {
+        viewModelScope.launch {
+            while (isActive) {
+                try {
+                    val userId = UserSession.currentUser?._id
+                    if (userId != null) {
+                        val response = RetrofitInstance.api.getNotificaciones(userId)
+                        if (response.isSuccessful && response.body() != null) {
+                            val notificaciones = response.body()!!
+
+                            // Si hay notificaciones pendientes (el backend solo devuelve las NO leídas)
+                            if (notificaciones.isNotEmpty()) {
+                                val noti = notificaciones[0]
+
+                                // 1. Mostrar mensaje en UI
+                                _ultimaNotificacion.value = noti.mensaje
+
+                                // 2. IMPORTANTE: Marcar como leída en el servidor para que no vuelva a salir
+                                marcarComoLeida(noti._id)
+
+                                // 3. ELIMINADO: cargarTableros()
+                                // Ya no recargamos la lista automáticamente para evitar el bucle visual.
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                delay(10000) // Esperar 10 segundos
+            }
+        }
+    }
+
+    // Función auxiliar para matar la notificación en el server
+    private fun marcarComoLeida(notiId: String) {
+        viewModelScope.launch {
+            try {
+                RetrofitInstance.api.marcarNotificacionLeida(notiId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun limpiarNotificacion() {
+        _ultimaNotificacion.value = null
+    }
 
     fun cargarTableros() {
         viewModelScope.launch {
@@ -39,7 +106,8 @@ class TableroViewModel : ViewModel() {
             try {
                 Log.d("TableroViewModel", "Iniciando petición a la API...") // Log de depuración
 
-                val response = RetrofitInstance.api.getTableros()
+                val currentUser = UserSession.currentUser
+                val response = RetrofitInstance.api.getTableros(currentUser?._id)
 
                 Log.d("TableroViewModel", "Código de respuesta: ${response.code()}") // Ver código HTTP
 

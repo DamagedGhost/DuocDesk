@@ -1,5 +1,6 @@
 package com.example.duocdesk.network.internal
 
+import com.example.duocdesk.model.Notificacion
 import com.example.duocdesk.model.Tablero
 import com.example.duocdesk.model.Usuario
 import okhttp3.MultipartBody
@@ -73,7 +74,12 @@ interface ApiService {
 
     // ===========================
 
+    @GET("api/notificaciones")
+    suspend fun getNotificaciones(@Query("userId") userId: String): Response<List<Notificacion>>
 
+    // --- AGREGAR ESTO ---
+    @PUT("api/notificaciones/{id}/leer")
+    suspend fun marcarNotificacionLeida(@Path("id") id: String): Response<Map<String, String>>
 
 
     companion object {
