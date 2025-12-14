@@ -159,6 +159,7 @@ fun AppNavigation() {
         composable("buscar") {
             BuscarScreen(
                 navController = navController,
+                viewModel = sharedTableroViewModel,
                 onBackClick = { navController.popBackStack() }
             )
         }
@@ -169,8 +170,8 @@ fun AppNavigation() {
         composable("search_result") {
             SearchResultScreen(
                 navController = navController,
-                onPerfilClick = { navController.navigate("perfil") },
-                onBackClick = { navController.popBackStack() }
+                viewModel = sharedTableroViewModel,
+                onPerfilClick = { navController.navigate("perfil") }
             )
         }
 

@@ -147,7 +147,7 @@ fun TableroScreen(
                     Icon(Icons.Filled.Search, contentDescription = "Buscar")
                 }
                 AnimatedIconButton(onClick = onFiltrarClick, modifier = Modifier.weight(1f)) {
-                    Icon(Icons.Filled.FilterList, contentDescription = "Tableros")
+                    Icon(Icons.Filled.FilterList, contentDescription = "Tableros", tint = MaterialTheme.colorScheme.primary)
                 }
                 AnimatedIconButton(onClick = onFavoritosClick, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.Favorite, contentDescription = "Favoritos")

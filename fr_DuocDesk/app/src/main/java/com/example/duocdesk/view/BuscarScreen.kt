@@ -2,21 +2,31 @@ package com.example.duocdesk.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import java.util.Calendar
 import com.example.duocdesk.model.UserSession
+import com.example.duocdesk.viewmodel.TableroViewModel
+import java.util.Calendar
 
 @Composable
-fun BuscarScreen(navController: NavController, onBackClick: () -> Unit = {}) {
-    var busqueda by remember { mutableStateOf("") }
+fun BuscarScreen(navController: NavController,
+                 viewModel: TableroViewModel,
+                 onBackClick: () -> Unit = {}) {
+    //lee texto de busqueda del viewmodel
+    val busqueda by viewModel.textoBusqueda.collectAsState()
+    val focusManager = LocalFocusManager.current
+
 
     //obtiene usuario actual
     val usuario = UserSession.currentUser
@@ -57,10 +67,18 @@ fun BuscarScreen(navController: NavController, onBackClick: () -> Unit = {}) {
 
      OutlinedTextField(
          value = busqueda,
-         onValueChange = { busqueda = it },
+         onValueChange = { viewModel.onBusquedaChange(it) },
          label = { Text("Buscar tablero...") },
          singleLine = true,
-         modifier = Modifier.fillMaxWidth()
+         modifier = Modifier.fillMaxWidth(),
+         keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+         keyboardActions = KeyboardActions(
+             onSearch = {
+                 focusManager.clearFocus()
+                 navController.navigate("search_result")
+
+            }
+        )
      )
 
      Spacer(modifier = Modifier.height(16.dp))
@@ -68,7 +86,8 @@ fun BuscarScreen(navController: NavController, onBackClick: () -> Unit = {}) {
      Button(
          onClick = { navController.navigate("search_result") },
          modifier = Modifier.fillMaxWidth(),
-         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary)
+         colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primary),
+         enabled = busqueda.isNotBlank()
      ) {
          Text("Buscar tablero", color = Color.White)
      }

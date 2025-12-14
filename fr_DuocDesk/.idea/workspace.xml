@@ -38,6 +38,11 @@
   <component name="ChangeListManager">
     <list default="true" id="27725bf4-45ff-49af-822f-c3bd8c24b21c" name="Changes" comment="Implement photo upload functionality and update local storage in PerfilViewModel">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/AppNavigation.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/AppNavigation.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/BuscarScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/BuscarScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/PerfilScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/PerfilScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/SearchResultScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/SearchResultScreen.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/TableroScreen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/view/TableroScreen.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/viewmodel/TableroViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/example/duocdesk/viewmodel/TableroViewModel.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

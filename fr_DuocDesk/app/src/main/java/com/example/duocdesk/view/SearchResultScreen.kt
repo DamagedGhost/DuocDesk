@@ -1,11 +1,10 @@
 package com.example.duocdesk.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FilterList
@@ -16,31 +15,31 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.duocdesk.R
 import com.example.duocdesk.viewmodel.PerfilViewModel
+import com.example.duocdesk.viewmodel.TableroViewModel
 
 @Composable
 fun SearchResultScreen(
     navController: NavController,
+    viewModel: TableroViewModel,
     onPerfilClick: () -> Unit = {},
-    onBackClick: () -> Unit = {}
+    perfilViewModel: PerfilViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    val viewModel: PerfilViewModel = viewModel()
-    val photoUri by viewModel.photoUri.collectAsState()
+    val photoUri by perfilViewModel.photoUri.collectAsState()
+    val resultados by viewModel.resultadosBusqueda.collectAsState()
+    val textoBusqueda by viewModel.textoBusqueda.collectAsState()
 
     LaunchedEffect(Unit) {
-        viewModel.loadSavedPhoto(context)
+        perfilViewModel.loadSavedPhoto(context)
     }
 
     Scaffold(
@@ -49,8 +48,9 @@ fun SearchResultScreen(
                 containerColor = MaterialTheme.colorScheme.surface,
                 contentColor = MaterialTheme.colorScheme.onSurface
             ) {
-                AnimatedIconButton(onClick = { navController.navigate("buscar") {launchSingleTop = true}}, modifier = Modifier.weight(1f)) {
-                    Icon(Icons.Filled.Search, contentDescription = "Buscar")
+                // ... (Iconos de navegación igual que antes) ...
+                AnimatedIconButton(onClick = { navController.navigate("buscar") {launchSingleTop = true} }, modifier = Modifier.weight(1f)) {
+                    Icon(Icons.Filled.Search, contentDescription = "Buscar", tint = MaterialTheme.colorScheme.primary)
                 }
                 AnimatedIconButton(onClick = {navController.navigate("tablero") {launchSingleTop = true}}, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Filled.FilterList, contentDescription = "Tableros")
@@ -67,6 +67,7 @@ fun SearchResultScreen(
                 .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
         ) {
+            // Header
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -78,70 +79,71 @@ fun SearchResultScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    IconButton(onClick = onPerfilClick) {
+                    AnimatedIconButton(onClick = onPerfilClick) {
                         if (photoUri != null) {
                             AsyncImage(
-                                model = photoUri,
-                                contentDescription = "Perfil",
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(CircleShape),
+                                model = photoUri, contentDescription = "Perfil",
+                                modifier = Modifier.size(36.dp).clip(CircleShape),
                                 contentScale = ContentScale.Crop
                             )
                         } else {
                             Icon(Icons.Filled.Person, contentDescription = "Perfil", tint = MaterialTheme.colorScheme.onSurface)
                         }
                     }
-
                     Text("Resultados", fontSize = 22.sp, fontWeight = FontWeight.Bold)
                     Spacer(modifier = Modifier.width(48.dp))
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
+
+            // Campo de búsqueda
             OutlinedTextField(
-                value = "DuocDesk",
-                onValueChange = {},
+                value = textoBusqueda,
+                onValueChange = { viewModel.onBusquedaChange(it) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp),
                 label = { Text("Buscar tablero...") },
-                singleLine = true
+                singleLine = true,
+                leadingIcon = { Icon(Icons.Filled.Search, null) }
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+
             Text(
-                text = "2 Tableros encontrados",
+                text = "${resultados.size} Tableros encontrados",
                 fontSize = 16.sp,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(horizontal = 16.dp)
             )
 
             Spacer(modifier = Modifier.height(12.dp))
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .clickable { navController.navigate("detail") },
-                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainer),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
-                shape = RoundedCornerShape(12.dp)
-            ) {
-                Column(modifier = Modifier.padding(16.dp)) {
-                    Image(
-                        painter = painterResource(id = R.drawable.duoc_desk),
-                        contentDescription = "Imagen de DuocDesk",
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(150.dp)
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    Text("DuocDesk", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                    Text(
-                        "Aplicación móvil inspirada en Trello para la gestión de tableros y tareas en equipos de Duoc UC.",
-                        fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
-                    )
+
+            // LISTA DE RESULTADOS
+            if (resultados.isEmpty()) {
+                Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text("No se encontraron coincidencias.", color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    items(resultados) { tablero ->
+                        // Reutilizamos tu TableroItem
+                        TableroItem(
+                            tablero = tablero,
+                            onClick = {
+                                navController.currentBackStackEntry?.savedStateHandle?.set("tablero", tablero)
+                                navController.navigate("detail")
+                            },
+                            onFavClick = {
+                                tablero._id?.let { viewModel.toggleFavorito(it) }
+                            }
+                        )
+                    }
                 }
             }
         }

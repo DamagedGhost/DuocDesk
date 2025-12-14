@@ -88,7 +88,7 @@ fun PerfilScreen(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.End
                 ) {
-                    IconButton(onClick = onCloseClick) {
+                    AnimatedIconButton(onClick = onCloseClick) {
                         Icon(Icons.Filled.Close, contentDescription = "Cerrar")
                     }
                 }

@@ -16,6 +16,9 @@ import kotlinx.coroutines.launch
 import com.example.duocdesk.model.TableroRequest
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.stateIn
 
 class TableroViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -28,6 +31,8 @@ class TableroViewModel(application: Application) : AndroidViewModel(application)
     // Para la búsqueda
     private val _textoBusqueda = MutableStateFlow("")
     val textoBusqueda = _textoBusqueda.asStateFlow()
+
+
 
     private val _mensaje = MutableStateFlow<String?>(null)
     val mensaje = _mensaje.asStateFlow()
@@ -173,6 +178,21 @@ class TableroViewModel(application: Application) : AndroidViewModel(application)
     fun onBusquedaChange(texto: String) {
         _textoBusqueda.value = texto
     }
+
+    // Esta lista se actualiza sola cuando cambias el texto O los tableros
+    val resultadosBusqueda = combine(_tableros, _textoBusqueda) { listaTableros, query ->
+        if (query.isBlank()) {
+            emptyList() // Si no hay búsqueda, mostramos lista vacía (o podrías mostrar todo)
+        } else {
+            listaTableros.filter {
+                it.nombre_tablero.contains(query, ignoreCase = true)
+            }
+        }
+    }.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        emptyList()
+    )
 
     // Filtrar localmente por búsqueda
     fun obtenerTablerosFiltrados(): List<Tablero> {
