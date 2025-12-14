@@ -16,13 +16,15 @@ data class Tablero(
 
 @Parcelize
 data class ListaTarea(
+    val _id: String? = null,
     val titulo: String,
     val tarjetas: List<Tarjeta> = emptyList()
 ): Parcelable
 
 @Parcelize
 data class Tarjeta(
+    val _id: String? = null,
     val titulo: String,
-    val descripcion: String,
+    val descripcion: String = "",
     val prioridad: String = "Media"
 ): Parcelable

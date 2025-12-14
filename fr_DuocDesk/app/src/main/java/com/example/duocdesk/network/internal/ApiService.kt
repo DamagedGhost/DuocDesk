@@ -65,6 +65,36 @@ interface ApiService {
     @DELETE("api/tableros/{id}")
     suspend fun eliminarTablero(@Path("id") id: String): Response<Map<String, String>>
 
+    // Crear una lista dentro de un tablero
+    @POST("api/tableros/{id}/listas")
+    suspend fun crearLista(
+        @Path("id") idTablero: String,
+        @Body body: Map<String, String> // Enviamos { "titulo": "..." }
+    ): Response<Tablero>
+
+    //Eliminar lista
+    @DELETE("api/tableros/{id}/listas/{listaId}")
+    suspend fun eliminarLista(
+        @Path("id") idTablero: String,
+        @Path("listaId") idLista: String
+    ): Response<Tablero>
+
+    // Crear Tarjeta
+    @POST("api/tableros/{id}/listas/{listaId}/tarjetas")
+    suspend fun crearTarjeta(
+        @Path("id") idTablero: String,
+        @Path("listaId") idLista: String,
+        @Body body: Map<String, String> // { "titulo": "..." }
+    ): Response<Tablero>
+
+    // Eliminar Tarjeta
+    @DELETE("api/tableros/{id}/listas/{listaId}/tarjetas/{tarjetaId}")
+    suspend fun eliminarTarjeta(
+        @Path("id") idTablero: String,
+        @Path("listaId") idLista: String,
+        @Path("tarjetaId") idTarjeta: String
+    ): Response<Tablero>
+
     // Invitar miembro (enviamos un Map con el email)
     @PUT("api/tableros/{id}/miembros")
     suspend fun invitarMiembro(

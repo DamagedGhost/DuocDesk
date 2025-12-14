@@ -37,6 +37,92 @@ class TableroDetailViewModel : ViewModel() {
         }
     }
 
+    fun crearLista(titulo: String) {
+        val idTablero = _tablero.value?._id ?: return
+        if (titulo.isBlank()) {
+            _mensaje.value = "El título no puede estar vacío"
+            return
+        }
+
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val body = mapOf("titulo" to titulo)
+                val response = RetrofitInstance.api.crearLista(idTablero, body)
+
+                if (response.isSuccessful && response.body() != null) {
+                    _tablero.value = response.body()
+                    _mensaje.value = "Lista '$titulo' creada"
+                } else {
+                    _mensaje.value = "Error al crear lista: ${response.code()}"
+                }
+            } catch (e: Exception) {
+                _mensaje.value = "Error: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun eliminarLista(idLista: String) {
+        val idTablero = _tablero.value?._id ?: return
+
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = RetrofitInstance.api.eliminarLista(idTablero, idLista)
+
+                if (response.isSuccessful && response.body() != null) {
+                    _tablero.value = response.body()
+                    _mensaje.value = "Lista eliminada"
+                } else {
+                    _mensaje.value = "Error al eliminar lista"
+                }
+            } catch (e: Exception) {
+                _mensaje.value = "Error: ${e.message}"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun crearTarjeta(idLista: String, titulo: String) {
+        val idTablero = _tablero.value?._id ?: return
+        if (titulo.isBlank()) return
+
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val body = mapOf("titulo" to titulo)
+                val response = RetrofitInstance.api.crearTarjeta(idTablero, idLista, body)
+                if (response.isSuccessful && response.body() != null) {
+                    _tablero.value = response.body()
+                }
+            } catch (e: Exception) {
+                _mensaje.value = "Error al crear tarjeta"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
+    fun eliminarTarjeta(idLista: String, idTarjeta: String) {
+        val idTablero = _tablero.value?._id ?: return
+        viewModelScope.launch {
+            _isLoading.value = true
+            try {
+                val response = RetrofitInstance.api.eliminarTarjeta(idTablero, idLista, idTarjeta)
+                if (response.isSuccessful && response.body() != null) {
+                    _tablero.value = response.body()
+                }
+            } catch (e: Exception) {
+                _mensaje.value = "Error al eliminar tarjeta"
+            } finally {
+                _isLoading.value = false
+            }
+        }
+    }
+
     // Método auxiliar para setear el tablero inicial desde la navegación
     fun setTableroInicial(t: Tablero) {
         _tablero.value = t
@@ -48,8 +134,6 @@ class TableroDetailViewModel : ViewModel() {
             _mensaje.value = "Ingresa un correo"
             return
         }
-
-
 
         viewModelScope.launch {
             _isLoading.value = true
