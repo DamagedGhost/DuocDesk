@@ -36,6 +36,7 @@ import coil.compose.AsyncImage
 import com.example.duocdesk.model.Tablero
 import com.example.duocdesk.viewmodel.PerfilViewModel
 import com.example.duocdesk.viewmodel.TableroViewModel
+import com.example.duocdesk.model.UserSession
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,6 +51,11 @@ fun TableroScreen(
     tableroViewModel: TableroViewModel = viewModel(),
     perfilViewModel: PerfilViewModel = viewModel()
 ) {
+    val currentUser = UserSession.currentUser
+    val isAdmin = currentUser?.rolGlobal == "ADMIN"
+    val topBarColor = if (isAdmin) Color(0xFFFFD700) else MaterialTheme.colorScheme.surface // Dorado si es Admin
+    val titleText = if (isAdmin) "ADMIN" else "Tablero"
+
     val context = LocalContext.current
     val photoUri by perfilViewModel.photoUri.collectAsState()
 
@@ -172,7 +178,7 @@ fun TableroScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(MaterialTheme.colorScheme.surface)
+                    .background(topBarColor) // <--- Color dinámico
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
                 Row(
@@ -198,7 +204,15 @@ fun TableroScreen(
                             )
                         }
                     }
-                    Text("Tablero", fontSize = 22.sp, fontWeight = FontWeight.Bold)
+
+                    // TÍTULO DINÁMICO
+                    Text(
+                        text = titleText,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = if(isAdmin) Color.Black else MaterialTheme.colorScheme.onSurface
+                    )
+
                     Spacer(modifier = Modifier.width(48.dp))
                 }
             }

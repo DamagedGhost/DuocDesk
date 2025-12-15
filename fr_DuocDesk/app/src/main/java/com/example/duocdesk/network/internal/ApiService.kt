@@ -111,13 +111,14 @@ interface ApiService {
 
     // ===========================
 
+    // =========== NOTIFICACIONES ===========
     @GET("api/notificaciones")
     suspend fun getNotificaciones(@Query("userId") userId: String): Response<List<Notificacion>>
 
     // --- AGREGAR ESTO ---
     @PUT("api/notificaciones/{id}/leer")
     suspend fun marcarNotificacionLeida(@Path("id") id: String): Response<Map<String, String>>
-
+    // ======================================
 
     companion object {
         private const val BASE_URL = "http://98.91.150.2:4000/"
